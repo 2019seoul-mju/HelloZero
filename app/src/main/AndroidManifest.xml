@@ -17,6 +17,7 @@
         <activity android:name=".stamp" />
         <activity android:name=".moneyBook" />
         <activity android:name=".login" />
+        <activity android:name=".join" />
 
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
