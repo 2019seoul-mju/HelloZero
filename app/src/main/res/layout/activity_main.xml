@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/container"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:paddingTop="?attr/actionBarSize">
+
+
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="300dp"
+        android:background="@color/colorAccent"
+        >
+    </ImageView>
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:background="@color/colorPrimaryDark"
+        >
+    </ImageView>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_gravity="center"
+        >
+
+        <Button
+            android:id="@+id/moveMap"
+            android:layout_width="200dp"
+            android:layout_height="100dp"
+            android:text="내 주변 가맹점 찾기"
+            android:gravity="center"
+
+
+            >
+        </Button>
+        <Button
+            android:id="@+id/moveBook"
+            android:layout_width="200dp"
+            android:layout_height="100dp"
+            android:text="제로 가계부"
+
+            >
+        </Button>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        >
+
+        <Button
+            android:id="@+id/moveStamp"
+            android:layout_width="200dp"
+            android:layout_height="100dp"
+            android:text="제로 스탬프"
+            >
+        </Button>
+        <Button
+            android:id="@+id/moveTutorial"
+            android:layout_width="200dp"
+            android:layout_height="100dp"
+            android:text="이용 안내"
+            >
+        </Button>
+    </LinearLayout>
+
+
+
+
+
+</LinearLayout>
