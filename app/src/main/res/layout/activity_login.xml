@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/login"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".login">
+
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_gravity="center">
+
+        <TextView
+            android:id="@+id/login_app_logo"
+            android:layout_width="258dp"
+            android:layout_height="100dp"
+            android:layout_gravity="center"
+            android:gravity="center"
+             android:text="로그인"
+            android:textSize="30sp"
+            android:layout_weight="1"
+            android:adjustViewBounds="true" />
+
+        <EditText
+            android:id="@+id/user_email_login"
+            android:layout_width="300dp"
+            android:layout_height="55dp"
+            android:layout_gravity="center_horizontal"
+            android:background="@drawable/rounded_login"
+            android:layout_marginTop="15dp"
+            android:hint="Email address"
+            android:textAlignment="center"
+            android:maxLength="25"
+            android:maxLines="1"
+            android:textColor="#FFFFFF"
+            android:textColorHint="#d3d3d3"
+            android:textSize="20dp"
+            android:layout_weight="1"/>
+
+        <EditText
+            android:id="@+id/user_password_login"
+            android:layout_width="300dp"
+            android:layout_height="55dp"
+            android:layout_gravity="center_horizontal"
+            android:background="@drawable/rounded_login"
+            android:layout_marginTop="15dp"
+            android:hint="Password"
+            android:textAlignment="center"
+            android:inputType="textPassword"
+            android:textColorHint="#d3d3d3"
+            android:maxLength="16"
+            android:maxLines="1"
+            android:textColor="#FFFFFF"
+            android:textSize="20dp"
+            android:layout_weight="1"/>
+
+        <Button
+            android:id="@+id/login_button"
+            android:layout_width="300dp"
+            android:layout_height="60dp"
+            android:layout_marginTop="30dp"
+            android:layout_gravity="center_horizontal"
+            android:background="@drawable/rounded_login_button"
+            android:text="Login"
+            android:textAlignment="center"
+            android:textColor="#FFFFFF"
+            android:textSize="20dp"
+            android:layout_weight="1"/>
+    </LinearLayout>
+
+</FrameLayout>
