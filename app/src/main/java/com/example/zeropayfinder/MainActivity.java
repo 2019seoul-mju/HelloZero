@@ -101,12 +101,19 @@ public class MainActivity extends AppCompatActivity {
             Toast.makeText(this, "홈아이콘 클릭", Toast.LENGTH_SHORT).show();
             return true;
         }
-        if (id == R.id.navigation_dashboard) {
-            Toast.makeText(this, "검색 클릭", Toast.LENGTH_SHORT).show();
+        //로그인
+        if (id == R.id.navigation_home) {
+
+            Intent intent = new Intent(getApplicationContext(),login.class);
+            startActivity(intent);
+
             return true;
         }
-        if (id == R.id.navigation_notifications) {
-            Toast.makeText(this, "액션버튼 클릭", Toast.LENGTH_SHORT).show();
+        //회원가입
+        if (id == R.id.navigation_dashboard) {
+            Intent intent = new Intent(getApplicationContext(),join.class);
+            startActivity(intent);
+
             return true;
         }
 
