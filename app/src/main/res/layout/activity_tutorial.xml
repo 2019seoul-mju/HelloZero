@@ -4,17 +4,16 @@
     android:id="@+id/container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:paddingTop="?attr/actionBarSize">
+    android:orientation="vertical">
 
 
 
-    <TextView
+    <WebView
+        android:id="@+id/webview"
         android:layout_width="match_parent"
-        android:layout_height="300dp"
-        android:text="이용안내 입니다."
+        android:layout_height="match_parent"
         >
-    </TextView>
+    </WebView>
 
 
 
