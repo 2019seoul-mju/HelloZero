@@ -29,7 +29,7 @@
 
 
         <EditText
-            android:id="@+id/user_email_join"
+            android:id="@+id/User_Email"
             android:layout_width="300dp"
             android:layout_height="55dp"
             android:layout_gravity="center_horizontal"
@@ -45,7 +45,7 @@
             android:layout_weight="1"/>
 
         <EditText
-            android:id="@+id/user_password_join"
+            android:id="@+id/User_Password"
             android:layout_width="300dp"
             android:layout_height="55dp"
             android:layout_gravity="center_horizontal"
@@ -61,7 +61,7 @@
             android:textSize="20dp"
             android:layout_weight="1"/>
         <EditText
-            android:id="@+id/user_name_join"
+            android:id="@+id/User_PasswordConfirm"
             android:layout_width="300dp"
             android:layout_height="55dp"
             android:layout_gravity="center_horizontal"
@@ -78,7 +78,7 @@
             android:layout_weight="1"/>
 
         <Button
-            android:id="@+id/join_button"
+            android:id="@+id/btnJoin"
             android:layout_width="300dp"
             android:layout_height="60dp"
             android:layout_marginTop="30dp"
