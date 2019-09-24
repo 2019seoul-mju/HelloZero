@@ -27,7 +27,7 @@
             android:adjustViewBounds="true" />
 
         <EditText
-            android:id="@+id/user_email_login"
+            android:id="@+id/Login_User_Email"
             android:layout_width="300dp"
             android:layout_height="55dp"
             android:layout_gravity="center_horizontal"
@@ -43,7 +43,7 @@
             android:layout_weight="1"/>
 
         <EditText
-            android:id="@+id/user_password_login"
+            android:id="@+id/Login_User_Password"
             android:layout_width="300dp"
             android:layout_height="55dp"
             android:layout_gravity="center_horizontal"
@@ -60,7 +60,7 @@
             android:layout_weight="1"/>
 
         <Button
-            android:id="@+id/login_button"
+            android:id="@+id/btnLogin"
             android:layout_width="300dp"
             android:layout_height="60dp"
             android:layout_marginTop="30dp"

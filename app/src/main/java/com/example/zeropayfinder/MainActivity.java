@@ -19,13 +19,15 @@ import androidx.navigation.ui.NavigationUI;
 
 public class MainActivity extends AppCompatActivity {
 
-    Button mbtMap,mbtBook,mbtStamp,mbtTutorial;
-    Intent mIntent;
+    Button mbtMap,mbtBook,mbtStamp,mbtTutorial,mbtLogout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        Intent intent=new Intent(this.getIntent());
+        final String jwt=intent.getStringExtra("jwt");
 
 //        //액션바 설정하기//
 //        //액션바 타이틀 변경하기
@@ -44,6 +46,7 @@ public class MainActivity extends AppCompatActivity {
         mbtTutorial=(Button)findViewById(R.id.moveTutorial);
 
 
+
         mbtMap.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -56,6 +59,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getApplicationContext(),moneyBook.class);
+                intent.putExtra("jwt",jwt);
                 startActivity(intent);//액티비티 띄우기
             }
         });
@@ -75,6 +79,13 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);//액티비티 띄우기
             }
         });
+
+        mbtLogout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        }); //로그아웃
 
 
         // Passing each menu ID as a set of Ids because each
