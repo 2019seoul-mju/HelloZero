@@ -7,16 +7,110 @@
     android:orientation="vertical">
 
 
-
-
-    <TextView
-        android:id="@+id/jwt"
+    <!--달력보기, 총 수입, 총 지출 바-->
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="300dp"
-        android:text="가계부 입니다."
-        >
-    </TextView>
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:orientation="horizontal">
 
+        <!--총 수입, 총 지출 테이블-->
+        <TableLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="6dp">
 
+            <!--두번째 행-->
+            <TableRow>
+
+                <!--첫번째 셀-->
+                <TextView
+                    android:layout_weight="0.5"
+                    android:gravity="end"
+                    android:text="총 지출 : " />
+
+                <!--두번째 셀 : 총 지출 값 출력-->
+                <TextView
+                    android:id="@+id/cost_sum"
+                    android:layout_weight="2"
+                    android:textColor="#ff0000" />
+            </TableRow>
+        </TableLayout>
+
+    </LinearLayout>
+    <!--수입/지출, 내용, 금액 목록 바-->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="60"
+        android:orientation="vertical">
+
+        <TableLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <!--첫번째 행-->
+            <TableRow>
+
+                <!-- 첫번째 셀 : +/- -->
+                <TextView
+                    android:layout_weight="1.5"
+                    android:gravity="center"
+                    android:text="내용" />
+
+                <!-- 세번째 셀 : 금액-->
+                <TextView
+                    android:layout_weight="1.5"
+                    android:gravity="center"
+                    android:text="금액" />
+
+            </TableRow>
+        </TableLayout>
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:fillViewport="true">
+            <!--내역을 출력해주기 위한 리스트 뷰-->
+            <ListView
+                android:id="@+id/account_list"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"></ListView>
+        </ScrollView>
+    </LinearLayout>
+    <!--내용, 금액 입력창 및 수입, 지출 버튼 바-->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:orientation="horizontal">
+
+        <!--내용 입력창-->
+        <EditText
+            android:id="@+id/edit_content"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:hint="내용" />
+
+        <!-- 금액 입력창-->
+        <EditText
+            android:id="@+id/edit_price"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:hint="금액"
+            android:inputType="number" />
+
+        <!--지출 입력 버튼-->
+        <Button
+            android:id="@+id/costbtn"
+            style="@style/Widget.AppCompat.Button.Borderless"
+            android:layout_width="50dp"
+            android:layout_height="wrap_content"
+            android:text="지출" />
+
+    </LinearLayout>
 
 </LinearLayout>
