@@ -4,13 +4,19 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context=".MainActivity">
     <item
-        android:id="@+id/navigation_home"
+        android:id="@+id/Login"
         android:icon="@drawable/ic_home_black_24dp"
-        android:title="@string/title_login" />
+        android:title="@string/title_login"
+        />
 
     <item
-        android:id="@+id/navigation_dashboard"
+        android:id="@+id/Join"
         android:icon="@drawable/ic_dashboard_black_24dp"
         android:title="@string/title_join" />
+
+    <item
+        android:id="@+id/Logout"
+        android:icon="@drawable/ic_dashboard_black_24dp"
+        android:title="logout" />
 
 </menu>

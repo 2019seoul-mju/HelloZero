@@ -7,20 +7,63 @@
     android:orientation="vertical">
 
 
-
-    <ImageView
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="300dp"
-        android:background="@color/colorAccent"
-        >
-    </ImageView>
+        android:layout_height="80dp"
+        android:orientation="horizontal">
 
-    <ImageView
-        android:layout_width="match_parent"
-        android:layout_height="100dp"
-        android:background="@color/colorPrimaryDark"
-        >
-    </ImageView>
+
+        <ImageView
+            android:id="@+id/Main_Logo"
+            android:layout_width="wrap_content"
+            android:layout_height="49dp"
+            android:layout_marginTop="60px"
+            android:layout_marginLeft="75dp"
+            android:scaleType="fitCenter"
+            android:src="@drawable/head_logo" />
+
+        <Button
+            android:id="@+id/btn_popupmenu"
+            android:layout_width="35dp"
+            android:layout_height="20dp"
+            android:layout_marginLeft="15dp"
+            android:layout_marginTop="35dp"
+            android:background="@drawable/side_menu" />
+    </LinearLayout>
+
+    <FrameLayout
+        android:id="@+id/FrameLayout01"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_gravity="center">
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="360dp"
+            android:src="@drawable/ad1"
+            >
+        </ImageView>
+
+        <Button
+            android:id="@+id/Login"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:background="@drawable/login_widget"
+            android:layout_marginLeft="18dp"
+            android:layout_marginTop="270dp"
+            ></Button>
+        <Button
+            android:id="@+id/Accountbtn"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:background="@drawable/account_widget"
+            android:layout_marginLeft="110dp"
+            android:layout_marginTop="270dp"
+            ></Button>
+
+    </FrameLayout>
+
 
 
     <LinearLayout
@@ -28,23 +71,24 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:layout_gravity="center"
+        android:layout_marginTop="4dp"
         >
 
         <Button
             android:id="@+id/moveMap"
-            android:layout_width="200dp"
-            android:layout_height="100dp"
-            android:text="내 주변 가맹점 찾기"
+            android:layout_width="205dp"
+            android:layout_height="140dp"
+            android:background="@drawable/shop"
             android:gravity="center"
-
 
             >
         </Button>
         <Button
             android:id="@+id/moveBook"
-            android:layout_width="200dp"
-            android:layout_height="100dp"
-            android:text="제로 가계부"
+            android:layout_width="205dp"
+            android:layout_height="140dp"
+            android:background="@drawable/zero_moneybook"
+            android:layout_marginLeft="2dp"
 
             >
         </Button>
@@ -52,31 +96,53 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="140dp"
         android:orientation="horizontal"
         >
 
         <Button
             android:id="@+id/moveStamp"
-            android:layout_width="200dp"
-            android:layout_height="100dp"
-            android:text="제로 스탬프"
+            android:layout_width="205dp"
+            android:layout_height="match_parent"
+            android:background="@drawable/zero_stamp"
+            android:layout_marginTop="2dp"
             >
         </Button>
         <Button
             android:id="@+id/moveTutorial"
-            android:layout_width="200dp"
-            android:layout_height="100dp"
-            android:text="이용 안내"
+            android:layout_width="205dp"
+            android:layout_height="match_parent"
+            android:background="@drawable/information"
+            android:layout_marginLeft="2dp"
+            android:layout_marginTop="2dp"
             >
         </Button>
     </LinearLayout>
 
-    <Button
-        android:id="@+id/Logoutbtn"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Logout" />
 
+    <!--    <LinearLayout-->
+    <!--        android:layout_width="match_parent"-->
+    <!--        android:layout_height="match_parent"-->
+    <!--        android:orientation="horizontal"-->
+    <!--        >-->
+    <!--        <Button-->
+    <!--            android:id="@+id/Loginbtn"-->
+    <!--            android:layout_width="205dp"-->
+    <!--            android:layout_height="match_parent"-->
+    <!--            android:background="#ffffff"-->
+    <!--            android:text="Login /"-->
+    <!--            android:layout_marginRight="2dp"-->
+    <!--            android:gravity="right|center"/>-->
+
+    <!--        <Button-->
+    <!--            android:id="@+id/Registerbtn"-->
+    <!--            android:layout_width="match_parent"-->
+    <!--            android:layout_height="match_parent"-->
+    <!--            android:background="#ffffff"-->
+    <!--            android:text=" Register"-->
+    <!--            android:layout_marginLeft="4dp"-->
+    <!--            android:gravity="left|center"-->
+    <!--            />-->
+    <!--    </LinearLayout>-->
 
 </LinearLayout>

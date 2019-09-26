@@ -7,88 +7,94 @@
     android:layout_height="match_parent"
     tools:context=".join">
 
-
-
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:layout_gravity="center">
+        android:layout_height="match_parent"
+        android:background="@drawable/register_bg">
+
+        <FrameLayout
+            android:layout_width="350dp"
+            android:layout_height="500dp"
+            android:layout_marginLeft="30dp"
+            android:layout_marginTop="150dp"
+            android:background="@drawable/register_form"
+            android:orientation="vertical">
 
 
-        <TextView
-            android:id="@+id/join_app_logo"
-            android:layout_width="258dp"
-            android:layout_height="100dp"
-            android:layout_gravity="center"
-            android:gravity="center"
-            android:text="회원가입"
-            android:textSize="30sp"
-            android:layout_weight="1"
-            android:adjustViewBounds="true" />
+            <ImageView
+                android:id="@+id/join_app_logo"
+                android:layout_width="100dp"
+                android:layout_height="28dp"
+                android:layout_marginTop="70dp"
+                android:layout_gravity="center_horizontal"
+                android:layout_weight="1"
+                android:adjustViewBounds="true"
+                android:gravity="center"
+                android:src="@drawable/register_logo" />
 
+            <EditText
+                android:id="@+id/Join_User_Email"
+                android:layout_width="300dp"
+                android:layout_height="45dp"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="150dp"
+                android:layout_weight="1"
+                android:background="@drawable/rounded_login"
+                android:hint="Email address"
+                android:maxLength="25"
+                android:maxLines="1"
+                android:textAlignment="center"
+                android:textColor="#FFFFFF"
+                android:textColorHint="#d3d3d3"
+                android:textSize="20dp" />
 
-        <EditText
-            android:id="@+id/Join_User_Email"
-            android:layout_width="300dp"
-            android:layout_height="55dp"
-            android:layout_gravity="center_horizontal"
-            android:background="@drawable/rounded_login"
-            android:layout_marginTop="15dp"
-            android:hint="Email address"
-            android:textAlignment="center"
-            android:maxLength="25"
-            android:maxLines="1"
-            android:textColor="#FFFFFF"
-            android:textColorHint="#d3d3d3"
-            android:textSize="20dp"
-            android:layout_weight="1"/>
+            <EditText
+                android:id="@+id/Join_User_Password"
+                android:layout_width="300dp"
+                android:layout_height="45dp"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="220dp"
+                android:layout_weight="1"
+                android:background="@drawable/rounded_login"
+                android:hint="Password"
+                android:inputType="textPassword"
+                android:maxLength="16"
+                android:maxLines="1"
+                android:textAlignment="center"
+                android:textColor="#FFFFFF"
+                android:textColorHint="#d3d3d3"
+                android:textSize="20dp" />
 
-        <EditText
-            android:id="@+id/Join_User_Password"
-            android:layout_width="300dp"
-            android:layout_height="55dp"
-            android:layout_gravity="center_horizontal"
-            android:background="@drawable/rounded_login"
-            android:layout_marginTop="15dp"
-            android:hint="Password"
-            android:textAlignment="center"
-            android:inputType="textPassword"
-            android:textColorHint="#d3d3d3"
-            android:maxLength="16"
-            android:maxLines="1"
-            android:textColor="#FFFFFF"
-            android:textSize="20dp"
-            android:layout_weight="1"/>
-        <EditText
-            android:id="@+id/Join_User_PasswordConfirm"
-            android:layout_width="300dp"
-            android:layout_height="55dp"
-            android:layout_gravity="center_horizontal"
-            android:background="@drawable/rounded_login"
-            android:layout_marginTop="15dp"
-            android:hint="Password"
-            android:textAlignment="center"
-            android:inputType="textPassword"
-            android:textColorHint="#d3d3d3"
-            android:maxLength="16"
-            android:maxLines="1"
-            android:textColor="#FFFFFF"
-            android:textSize="20dp"
-            android:layout_weight="1"/>
+            <EditText
+                android:id="@+id/Join_User_PasswordConfirm"
+                android:layout_width="300dp"
+                android:layout_height="45dp"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="290dp"
+                android:layout_weight="1"
+                android:background="@drawable/rounded_login"
+                android:hint="Password"
+                android:inputType="textPassword"
+                android:maxLength="16"
+                android:maxLines="1"
+                android:textAlignment="center"
+                android:textColor="#FFFFFF"
+                android:textColorHint="#d3d3d3"
+                android:textSize="20dp" />
 
-        <Button
-            android:id="@+id/btnJoin"
-            android:layout_width="300dp"
-            android:layout_height="60dp"
-            android:layout_marginTop="30dp"
-            android:layout_gravity="center_horizontal"
-            android:background="@drawable/rounded_login_button"
-            android:text="Join"
-            android:textAlignment="center"
-            android:textColor="#FFFFFF"
-            android:textSize="20dp"
-            android:layout_weight="1"/>
+            <Button
+                android:id="@+id/btnJoin"
+                android:layout_width="200dp"
+                android:layout_height="40dp"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="400dp"
+                android:layout_weight="1"
+                android:background="@drawable/rounded_login_button"
+                android:text="Join"
+                android:textAlignment="center"
+                android:textColor="#FFFFFF"
+                android:textSize="20dp" />
+        </FrameLayout>
+
     </LinearLayout>
-
 </FrameLayout>
