@@ -5,6 +5,14 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.FragmentActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.HttpUrl;
+import okhttp3.MediaType;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
 
 import android.Manifest;
 import android.content.DialogInterface;
@@ -15,6 +23,7 @@ import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
 import android.view.View;
@@ -37,6 +46,10 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.material.snackbar.Snackbar;
+import com.google.gson.Gson;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.List;
@@ -70,6 +83,7 @@ public class Map extends FragmentActivity implements OnMapReadyCallback,Activity
     private FusedLocationProviderClient mFusedLocationClient;
     private LocationRequest locationRequest;
     private Location location;
+    public String Location_result;
 
     private View mLayout;  // Snackbar 사용하기 위해서는 View가 필요합니다.
     // (참고로 Toast에서는 Context가 필요했습니다.)
@@ -77,6 +91,9 @@ public class Map extends FragmentActivity implements OnMapReadyCallback,Activity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+//        locationCallback;
+//
+//        Log.d(TAG, "onCreate :" + mCurrentLocatiion.getLatitude());
 
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON,
                 WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
@@ -118,12 +135,30 @@ public class Map extends FragmentActivity implements OnMapReadyCallback,Activity
     public void onMapReady(GoogleMap googleMap) {
         Log.d(TAG, "onMapReady :");
         mMap = googleMap;
+//        Map.ConnectServer connectServerGet = new Map.ConnectServer();
+//        connectServerGet.requestGet("http://15.164.118.95/hello/findZero/127.0323094/37.52557938", "location");
 
         // Add a marker in Sydney and move the camera
-        LatLng SEOUL = new LatLng(37.56, 126.97);
-        mMap.addMarker(new MarkerOptions().position(SEOUL).title("서울").snippet("한국의 수도"));
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(SEOUL));
-        mMap.animateCamera(CameraUpdateFactory.zoomTo(10));
+        Log.d("aaaa", "Response Body is " + Location_result);
+//        if( Location_result != null){
+//            Gson gson = new Gson();
+//            LocationGson info = gson.fromJson(Location_result, LocationGson.class);
+//            for(int i = 0; i< info.result.size(); i++){
+//                LatLng LatLng = new LatLng(Double.parseDouble(info.result.get(i).Franchise_Long), Double.parseDouble(info.result.get(i).Franchise_Lat));
+//                String markerSnippet = "위도:" + String.valueOf(info.result.get(i).Franchise_Lat) + " 경도:" + String.valueOf(info.result.get(i).Franchise_Long);
+//                MarkerOptions markerOptions = new MarkerOptions();
+//                markerOptions.position(LatLng);
+//                markerOptions.title(info.result.get(i).Franchise_Name);
+//                markerOptions.snippet(markerSnippet);
+//                markerOptions.draggable(true);
+//                mMap.addMarker(markerOptions);
+//            }
+//
+//        }
+//        LatLng SEOUL = new LatLng(37.56, 126.97);
+//        mMap.addMarker(new MarkerOptions().position(SEOUL).title("서울").snippet("한국의 수도"));
+//        mMap.moveCamera(CameraUpdateFactory.newLatLng(SEOUL));
+//        mMap.animateCamera(CameraUpdateFactory.zoomTo(10));
         //런타임 퍼미션 요청 대화상자나 GPS 활성 요청 대화상자 보이기전에
         //지도의 초기위치를 서울로 이동
         setDefaultLocation();
@@ -178,6 +213,27 @@ public class Map extends FragmentActivity implements OnMapReadyCallback,Activity
 
         mMap.getUiSettings().setMyLocationButtonEnabled(true);
         mMap.animateCamera(CameraUpdateFactory.zoomTo(15));
+        mMap.setOnMyLocationButtonClickListener(new GoogleMap.OnMyLocationButtonClickListener() {
+            @Override
+            public boolean onMyLocationButtonClick() {
+                LatLng currentLatLng = new LatLng(location.getLatitude(), location.getLongitude());
+                CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLng(currentLatLng);
+                mMap.moveCamera(cameraUpdate);
+                Gson gson = new Gson();
+                LocationGson info = gson.fromJson(Location_result, LocationGson.class);
+                for(int i = 0; i< info.result.size(); i++){
+                    LatLng LatLng = new LatLng(Double.parseDouble(info.result.get(i).Franchise_Long), Double.parseDouble(info.result.get(i).Franchise_Lat));
+                    String markerSnippet = "위도:" + String.valueOf(info.result.get(i).Franchise_Lat) + " 경도:" + String.valueOf(info.result.get(i).Franchise_Long);
+                    MarkerOptions markerOptions = new MarkerOptions();
+                    markerOptions.position(LatLng);
+                    markerOptions.title(info.result.get(i).Franchise_Name);
+                    markerOptions.snippet(markerSnippet);
+                    markerOptions.draggable(true);
+                    mMap.addMarker(markerOptions);
+                }
+                return true;
+            }
+        });
         mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
 
             @Override
@@ -212,6 +268,8 @@ public class Map extends FragmentActivity implements OnMapReadyCallback,Activity
 
                 //현재 위치에 마커 생성하고 이동
                 setCurrentLocation(location, markerTitle, markerSnippet);
+
+
 
                 mCurrentLocatiion = location;
             }
@@ -354,8 +412,12 @@ public class Map extends FragmentActivity implements OnMapReadyCallback,Activity
 
         currentMarker = mMap.addMarker(markerOptions);
 
-        CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLng(currentLatLng);
-        mMap.moveCamera(cameraUpdate);
+        Map.ConnectServer connectServerGet = new Map.ConnectServer();
+        connectServerGet.requestGet("http://15.164.118.95/hello/findZero/"+ location.getLongitude() + "/" + location.getLatitude(), "location");
+//        connectServerGet.requestGet("http://15.164.118.95/hello/findZero/127.0323094/37.52557938", "location");
+
+//        CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLng(currentLatLng);
+//        mMap.moveCamera(cameraUpdate);
 
     }
 
@@ -570,5 +632,113 @@ public class Map extends FragmentActivity implements OnMapReadyCallback,Activity
 
                 break;
         }
+    }
+
+    public class LocationGson {
+        List<Location_info> result;
+        String isSuccess;
+        String code;
+        String message;
+    }
+
+    public class Location_info {
+
+        String Franchise_RoadLoc;
+        String Franchise_Loc;
+        String Franchise_State;
+        String Franchise_Name;
+        String Franchise_Desc;
+        String Franchise_Lat;
+        String Franchise_Long;
+    }
+
+    class ConnectServer {
+
+        //Client 생성
+        OkHttpClient client = new OkHttpClient();
+
+        public void requestGet(String url, String searchKey) {
+            //URL에 포함할 Query문 작성 Name&Value
+            HttpUrl.Builder urlBuilder = HttpUrl.parse(url).newBuilder();
+            urlBuilder.addEncodedQueryParameter("searchKey", searchKey);
+            String requestUrl = urlBuilder.build().toString();
+
+            //Query문이 들어간 URL을 토대로 Request 생성
+            Request request = new Request.Builder().url(requestUrl).build();
+
+            //만들어진 Request를 서버로 요청할 Client 생성
+            //Callback을 통해 비동기 방식으로 통신을 하여 서버로부터 받은 응답을 어떻게 처리 할 지 정의함
+
+            client.newCall(request).enqueue(new Callback() {
+
+                @Override
+                public void onFailure(Call call, IOException e) {
+                    Log.d("error", "Connect Server Error is " + e.toString());
+                }
+
+                @Override
+
+                public void onResponse(Call call, Response response) throws IOException {
+
+                    Location_result = response.body().string();
+//                    Gson gson = new Gson();
+//                    LocationGson info = gson.fromJson(result, LocationGson.class);
+//                    for(int i = 0; i< info.result.size(); i++){
+//                        LatLng LatLng = new LatLng(Double.parseDouble(info.result.get(i).Franchise_Lat), Double.parseDouble(info.result.get(i).Franchise_Long));
+//                        String markerSnippet = "위도:" + String.valueOf(info.result.get(i).Franchise_Lat) + " 경도:" + String.valueOf(info.result.get(i).Franchise_Long);
+//                        MarkerOptions markerOptions = new MarkerOptions();
+//                        markerOptions.position(LatLng);
+//                        markerOptions.title(info.result.get(i).Franchise_Name);
+//                        markerOptions.snippet(markerSnippet);
+//                        markerOptions.draggable(true);
+//                        mMap.addMarker(markerOptions);
+//                    }
+                }
+            });
+        }
+
+//        public void requestPost(String url, String id, String password) {
+//
+//            //Request Body에 서버에 보낼 데이터 작성
+//            JSONObject postdata = new JSONObject();
+//            try {
+//                postdata.put("email", id);
+//                postdata.put("password", password);
+//            } catch (JSONException e) {
+//                e.printStackTrace();
+//            }
+//            RequestBody body = RequestBody.create(postdata.toString(), MediaType.parse("application/json; charset=utf-8"));
+//            //작성한 Body와 데이터를 보낼 url을 Request에 붙임
+//            Request request = new Request.Builder().url(url).post(body).build();
+//            //request를 Client에 세팅하고 Server로 부터 온 Response를 처리할 Callback 작성
+//            client.newCall(request).enqueue(new Callback() {
+//                @Override
+//                public void onFailure(Call call, IOException e) {
+//                    Log.d("error", "Connect Server Error is " + e.toString());
+//                }
+//
+//                @Override
+//                public void onResponse(Call call, Response response) throws IOException {
+//                    String result = response.body().string();
+//                    Gson gson = new Gson();
+//                    login.ConnectServer.Login_info info = gson.fromJson(result, login.ConnectServer.Login_info.class);
+//
+//                    if (info.isSuccess == true) {
+//                        Looper.prepare();
+//                        Toast.makeText(getApplicationContext(), "로그인 성공!", Toast.LENGTH_LONG).show();
+//                        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+//                        intent.putExtra("jwt", info.jwt);
+//                        startActivity(intent);
+//                        Looper.loop();
+//
+//                    } else {
+//                        Looper.prepare();
+//                        Toast.makeText(getApplicationContext(), info.message, Toast.LENGTH_LONG).show();
+//                        Looper.loop();
+//                    }
+//
+//                }
+//            });
+//        }
     }
 }

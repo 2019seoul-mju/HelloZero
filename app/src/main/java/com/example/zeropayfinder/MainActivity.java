@@ -19,7 +19,7 @@ import androidx.navigation.ui.NavigationUI;
 
 public class MainActivity extends AppCompatActivity {
 
-    Button mbtMap,mbtBook,mbtStamp,mbtTutorial,mbtLogout;
+    Button mbtMap,mbtBook,mbtStamp,mbtTutorial;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,13 +79,6 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);//액티비티 띄우기
             }
         });
-
-        mbtLogout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-            }
-        }); //로그아웃
 
 
         // Passing each menu ID as a set of Ids because each
