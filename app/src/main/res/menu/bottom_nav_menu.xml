@@ -6,17 +6,20 @@
     <item
         android:id="@+id/Login"
         android:icon="@drawable/ic_home_black_24dp"
+        android:visibility="visible"
         android:title="@string/title_login"
         />
 
     <item
         android:id="@+id/Join"
         android:icon="@drawable/ic_dashboard_black_24dp"
+        android:visibility="visible"
         android:title="@string/title_join" />
 
     <item
         android:id="@+id/Logout"
         android:icon="@drawable/ic_dashboard_black_24dp"
+        android:visibility="visible"
         android:title="logout" />
 
 </menu>

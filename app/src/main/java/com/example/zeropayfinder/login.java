@@ -30,7 +30,7 @@ public class login extends AppCompatActivity {
 
     private EditText Login_User_Email;
     private EditText Login_User_Password;
-    private Button btnLogin;
+    private Button btnLogin,btnJoin;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,7 +40,7 @@ public class login extends AppCompatActivity {
         Login_User_Email = (EditText) findViewById(R.id.Login_User_Email);
         Login_User_Password = (EditText) findViewById(R.id.Login_User_Password);
         btnLogin = (Button) findViewById(R.id.btnLogin);
-
+        btnJoin = (Button) findViewById(R.id.btnjoin);
         btnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -71,7 +71,13 @@ public class login extends AppCompatActivity {
 
             }
         });
-
+        btnJoin.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent2 = new Intent(getApplicationContext(),join.class);
+                startActivity(intent2);//액티비티 띄우기
+            }
+        });
         // Login Screen 으로 Activity 이동
 //        btnLogin.setOnClickListener(new View.OnClickListener() {
 //            public void onClick(View view) {
@@ -155,9 +161,10 @@ public class login extends AppCompatActivity {
                             Toast.makeText(getApplicationContext(), "로그인 성공!", Toast.LENGTH_LONG).show();
                             Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                             intent.putExtra("jwt",info.jwt);
-                            startActivity(intent);
+                            MainActivity.setJWT(info.jwt);
+                            //startActivity(intent);
+                            finish();
                             Looper.loop();
-
                         } else {
                             Looper.prepare();
                             Toast.makeText(getApplicationContext(), info.message, Toast.LENGTH_LONG).show();

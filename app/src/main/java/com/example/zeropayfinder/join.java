@@ -18,12 +18,14 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 import android.util.Log;
+
+import com.google.gson.Gson;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 import java.io.IOException;
-
-
-
+import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 
 public class join extends AppCompatActivity {
@@ -33,7 +35,8 @@ public class join extends AppCompatActivity {
     private EditText Join_User_Password;
     private EditText Join_User_PasswordConfirm;
     private Button btnJoin;
-
+    private Boolean isSuccess;
+    private String msg;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -109,15 +112,35 @@ public class join extends AppCompatActivity {
                     return;
                 }
 
-                if (!email.isEmpty() && !password.isEmpty()) {
-                    ConnectServer connectServerPost = new ConnectServer();
-                    connectServerPost.requestPost("http://15.164.118.95/hello/user", email, password);
-                    Log.d("test", email);
-                    Log.d("test", password);
+                if(!android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches())
+                {
+                    Toast.makeText(join.this,"이메일 형식이 아닙니다",Toast.LENGTH_SHORT).show();
+                    Join_User_Password.setText("");
+                    Join_User_PasswordConfirm.setText("");
+                    Join_User_Password.requestFocus();
+                    return;
+                }
 
-                    finish();
+                if (!email.isEmpty() && !password.isEmpty()) {
+                    try{
+                        ConnectServer connectServerPost = new ConnectServer();
+                        connectServerPost.requestPost("http://15.164.118.95/hello/user", email, password);
+                        Log.d("test", email);
+                        Log.d("test", password);
+                        Thread.sleep(1000);
+                    }catch (Exception e){
+
+                    }
                 } else {
                     Toast.makeText(getApplicationContext(), "필수사항은 모두 입력하세요!", Toast.LENGTH_LONG).show();
+                    return;
+                }
+
+
+                if(isSuccess){
+                    finish();
+                } else{
+                    Toast.makeText(join.this, msg, Toast.LENGTH_SHORT).show();
                 }
 
             }
@@ -185,11 +208,28 @@ public class join extends AppCompatActivity {
 
                 @Override
                 public void onResponse(Call call, Response response) throws IOException {
-                    Log.d("aaaa", "Response Body is " + response.body().string());
+                    String result = response.body().string();
+                    Log.d("test", result);
+                    Gson gson = new Gson();
+                    joinGson info = gson.fromJson(result, joinGson.class);
+                    //Log.d("test", info.isSuccess);
+                    setIsSuccess(info.isSuccess);
+                    //isSuccess = info.isSuccess;
+                    msg = info.message;
                 }
             });
         }
 
+    }
+    private void setIsSuccess(Boolean isSucess) {
+        this.isSuccess = isSucess;
+        //Log.d("real log", this.isSuccess);
+    }
+
+    public class joinGson {
+        Boolean isSuccess;
+        String code;
+        String message;
     }
 
 
