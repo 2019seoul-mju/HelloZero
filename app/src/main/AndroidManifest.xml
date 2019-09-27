@@ -18,6 +18,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.Light.NoActionBar">
         <activity android:name=".tutorial"></activity>
+        <activity android:name=".SearchMap" />
         <activity android:name=".stamp" />
         <activity android:name=".moneyBook" />
         <activity android:name=".login" />

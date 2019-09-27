@@ -2,16 +2,15 @@ package com.example.zeropayfinder;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
-import androidx.fragment.app.FragmentActivity;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.fragment.app.FragmentActivity;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.HttpUrl;
-import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
-import okhttp3.RequestBody;
 import okhttp3.Response;
 
 import android.Manifest;
@@ -23,13 +22,12 @@ import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
-import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
-import android.widget.TextView;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
@@ -50,30 +48,26 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.gson.Gson;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.io.IOException;
 import java.util.List;
 import java.util.Locale;
 
-public class Map extends FragmentActivity implements OnMapReadyCallback,ActivityCompat.OnRequestPermissionsResultCallback
-{
+public class SearchMap extends FragmentActivity implements OnMapReadyCallback,ActivityCompat.OnRequestPermissionsResultCallback {
 
     private GoogleMap mMap;
     private Marker currentMarker = null;
-    public Button btnMyLocation;
+    public Button btnSearchLocation;
+    private String Location_result;
+    private EditText Location_name;
 
-    private static final String TAG = "googlemap_current";
+    private static final String TAG = "googlemap_search";
     private static final int GPS_ENABLE_REQUEST_CODE = 2001;
     private static final int UPDATE_INTERVAL_MS = 1000;  // 1초
     private static final int FASTEST_UPDATE_INTERVAL_MS = 500; // 0.5초
 
-
     // onRequestPermissionsResult에서 수신된 결과에서 ActivityCompat.requestPermissions를 사용한 퍼미션 요청을 구별하기 위해 사용됩니다.
     private static final int PERMISSIONS_REQUEST_CODE = 100;
     boolean needRequest = false;
-
 
     // 앱을 실행하기 위해 필요한 퍼미션을 정의합니다.
     String[] REQUIRED_PERMISSIONS  = {Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION};  // 외부 저장소
@@ -82,30 +76,21 @@ public class Map extends FragmentActivity implements OnMapReadyCallback,Activity
     Location mCurrentLocatiion;
     LatLng currentPosition;
 
-
     private FusedLocationProviderClient mFusedLocationClient;
     private LocationRequest locationRequest;
     private Location location;
-    private String Location_result;
 
-    private View mLayout;  // Snackbar 사용하기 위해서는 View가 필요합니다.
-    // (참고로 Toast에서는 Context가 필요했습니다.)
+    private View mLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-//        locationCallback;
-//
-//        Log.d(TAG, "onCreate :" + mCurrentLocatiion.getLatitude());
-
-
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON,
                 WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+        setContentView(R.layout.activity_searchmap);
+        mLayout = findViewById(R.id.Searchmap);
 
-        setContentView(R.layout.activity_map);
-
-        mLayout = findViewById(R.id.map);
+        Location_name = (EditText) findViewById(R.id.LocationText);
 
         locationRequest = new LocationRequest()
                 .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
@@ -120,38 +105,20 @@ public class Map extends FragmentActivity implements OnMapReadyCallback,Activity
 
 
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
-        // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
-                .findFragmentById(R.id.map);
+                .findFragmentById(R.id.Searchmap);
         mapFragment.getMapAsync(this);
     }
 
-
-    /**
-     * Manipulates the map once available.
-     * This callback is triggered when the map is ready to be used.
-     * This is where we can add markers or lines, add listeners or move the camera. In this case,
-     * we just add a marker near Sydney, Australia.
-     * If Google Play services is not installed on the device, the user will be prompted to install
-     * it inside the SupportMapFragment. This method will only be triggered once the user has
-     * installed Google Play services and returned to the app.
-     */
-
     @Override
-    public void onMapReady(GoogleMap googleMap) {
-        Log.d(TAG, "onMapReady :");
-        mMap = googleMap;
-//        Map.ConnectServer connectServerGet = new Map.ConnectServer();
-//        connectServerGet.requestGet("http://15.164.118.95/hello/findZero/127.0323094/37.52557938", "location");
+    public void onMapReady(final GoogleMap googleMap) {
 
-        // Add a marker in Sydney and move the camera
-        Log.d("aaaa", "Response Body is " + Location_result);
+        mMap = googleMap;
+
 
         //런타임 퍼미션 요청 대화상자나 GPS 활성 요청 대화상자 보이기전에
         //지도의 초기위치를 서울로 이동
         setDefaultLocation();
-
-
 
         //런타임 퍼미션 처리
         // 1. 위치 퍼미션을 가지고 있는지 체크합니다.
@@ -185,7 +152,7 @@ public class Map extends FragmentActivity implements OnMapReadyCallback,Activity
                     public void onClick(View view) {
 
                         // 3-3. 사용자게에 퍼미션 요청을 합니다. 요청 결과는 onRequestPermissionResult에서 수신됩니다.
-                        ActivityCompat.requestPermissions(Map.this, REQUIRED_PERMISSIONS,
+                        ActivityCompat.requestPermissions(SearchMap.this, REQUIRED_PERMISSIONS,
                                 PERMISSIONS_REQUEST_CODE);
                     }
                 }).show();
@@ -199,14 +166,16 @@ public class Map extends FragmentActivity implements OnMapReadyCallback,Activity
             }
         }
 
-        btnMyLocation = (Button) findViewById(R.id.btnMyLocation);
+        btnSearchLocation = (Button) findViewById(R.id.search_button);
 
-        btnMyLocation.setOnClickListener(new View.OnClickListener() {
+        btnSearchLocation.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 if(Location_result != null){
                     Gson gson = new Gson();
-                    LocationGson info = gson.fromJson(Location_result, LocationGson.class);
+                    Log.d("aaaa", "ㅁㅁㄴㅇㄹ" + Location_result);
+                    SearchMap.LocationGson info = gson.fromJson(Location_result, SearchMap.LocationGson.class);
                     for(int i = 0; i< info.result.size(); i++){
                         LatLng LatLng = new LatLng(Double.parseDouble(info.result.get(i).Franchise_Long), Double.parseDouble(info.result.get(i).Franchise_Lat));
                         String markerSnippet = "도로명 주소:" + String.valueOf(info.result.get(i).Franchise_RoadLoc)+ "\n"
@@ -219,67 +188,16 @@ public class Map extends FragmentActivity implements OnMapReadyCallback,Activity
                         markerOptions.draggable(true);
                         mMap.addMarker(markerOptions);
                     }
-                    LatLng currentLatLng = new LatLng(location.getLatitude(), location.getLongitude());
-                    CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLng(currentLatLng);
-                    mMap.moveCamera(cameraUpdate);
+//                    LatLng currentLatLng = new LatLng(location.getLatitude(), location.getLongitude());
+//                    CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLng(currentLatLng);
+//                    mMap.moveCamera(cameraUpdate);
                 } else {
                     Toast.makeText(getApplicationContext(), "잠시만 기다려주세요!", Toast.LENGTH_SHORT).show();
                 }
 
             }
         });
-
-        // Setting a custom info window adapter for the google map
-        googleMap.setInfoWindowAdapter(new GoogleMap.InfoWindowAdapter() {
-
-            // Use default InfoWindow frame
-            @Override
-            public View getInfoWindow(Marker arg0) {
-                return null;
-            }
-
-            // Defines the contents of the InfoWindow
-            @Override
-            public View getInfoContents(Marker arg0) {
-                View v = null;
-                try {
-
-                    // Getting view from the layout file info_window_layout
-                    v = getLayoutInflater().inflate(R.layout.custom_infowindow, null);
-
-                    // Getting reference to the TextView to set latitude
-                    TextView Marker_Title = (TextView) v.findViewById(R.id.Marker_Title);
-                    Marker_Title.setText(arg0.getTitle());
-                    TextView Marker_Snippet = (TextView) v.findViewById(R.id.Marker_Snippet);
-                    Marker_Snippet.setText(arg0.getSnippet());
-
-                } catch (Exception ev) {
-                    System.out.print(ev.getMessage());
-                }
-
-                return v;
-            }
-        });
-
-        mMap.getUiSettings().setMyLocationButtonEnabled(true);
-        mMap.animateCamera(CameraUpdateFactory.zoomTo(15));
-        mMap.setOnMyLocationButtonClickListener(new GoogleMap.OnMyLocationButtonClickListener() {
-            @Override
-            public boolean onMyLocationButtonClick() {
-
-                return true;
-            }
-        });
-        mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
-
-            @Override
-            public void onMapClick(LatLng latLng) {
-
-                Log.d( TAG, "onMapClick :");
-            }
-        });
     }
-
 
     LocationCallback locationCallback = new LocationCallback() {
         @Override
@@ -316,8 +234,6 @@ public class Map extends FragmentActivity implements OnMapReadyCallback,Activity
 
     };
 
-
-
     private void startLocationUpdates() {
 
         if (!checkLocationServicesStatus()) {
@@ -352,7 +268,6 @@ public class Map extends FragmentActivity implements OnMapReadyCallback,Activity
 
     }
 
-
     @Override
     protected void onStart() {
         super.onStart();
@@ -372,7 +287,6 @@ public class Map extends FragmentActivity implements OnMapReadyCallback,Activity
 
     }
 
-
     @Override
     protected void onStop() {
 
@@ -384,9 +298,6 @@ public class Map extends FragmentActivity implements OnMapReadyCallback,Activity
             mFusedLocationClient.removeLocationUpdates(locationCallback);
         }
     }
-
-
-
 
     public String getCurrentAddress(LatLng latlng) {
 
@@ -410,8 +321,6 @@ public class Map extends FragmentActivity implements OnMapReadyCallback,Activity
             return "잘못된 GPS 좌표";
 
         }
-
-
         if (addresses == null || addresses.size() == 0) {
             Toast.makeText(this, "주소 미발견", Toast.LENGTH_LONG).show();
             return "주소 미발견";
@@ -422,7 +331,6 @@ public class Map extends FragmentActivity implements OnMapReadyCallback,Activity
         }
 
     }
-
 
     public boolean checkLocationServicesStatus() {
         LocationManager locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
@@ -446,15 +354,11 @@ public class Map extends FragmentActivity implements OnMapReadyCallback,Activity
 //        markerOptions.snippet(markerSnippet);
 //        markerOptions.draggable(true);
 
+        ConnectServer_get(Location_name.getText().toString().trim());
 
 //        currentMarker = mMap.addMarker(markerOptions);
 
-        Map.ConnectServer connectServerGet = new Map.ConnectServer();
-//        connectServerGet.requestGet("http://15.164.118.95/hello/findZero/"+ location.getLongitude() + "/" + location.getLatitude(), "location");
-        connectServerGet.requestGet("http://15.164.118.95/hello/findZero/127.0323094/37.52557938", "location");
-
     }
-
 
     public void setDefaultLocation() {
 
@@ -480,7 +384,6 @@ public class Map extends FragmentActivity implements OnMapReadyCallback,Activity
 
     }
 
-
     //여기부터는 런타임 퍼미션 처리을 위한 메소드들
     private boolean checkPermission() {
 
@@ -499,8 +402,6 @@ public class Map extends FragmentActivity implements OnMapReadyCallback,Activity
         return false;
 
     }
-
-
 
     /*
      * ActivityCompat.requestPermissions를 사용한 퍼미션 요청의 결과를 리턴받는 메소드입니다.
@@ -569,11 +470,10 @@ public class Map extends FragmentActivity implements OnMapReadyCallback,Activity
         }
     }
 
-
     //여기부터는 GPS 활성화를 위한 메소드들
     private void showDialogForLocationServiceSetting() {
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(Map.this);
+        AlertDialog.Builder builder = new AlertDialog.Builder(SearchMap.this);
         builder.setTitle("위치 서비스 비활성화");
         builder.setMessage("앱을 사용하기 위해서는 위치 서비스가 필요합니다.\n"
                 + "위치 설정을 수정하실래요?");
@@ -618,6 +518,10 @@ public class Map extends FragmentActivity implements OnMapReadyCallback,Activity
 
                 break;
         }
+    }
+    public void ConnectServer_get(String search){
+        SearchMap.ConnectServer connectServerGet = new SearchMap.ConnectServer();
+        connectServerGet.requestGet("http://15.164.118.95/hello/searchZero/"+ search, "location");
     }
 
     public class LocationGson {

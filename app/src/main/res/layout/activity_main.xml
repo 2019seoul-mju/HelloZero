@@ -61,7 +61,7 @@
             android:layout_marginLeft="18dp"
             android:layout_marginTop="270dp"
             ></Button>
- <!--       <Button
+           <Button
             android:id="@+id/Accountbtn"
             android:layout_width="80dp"
             android:layout_height="80dp"
@@ -69,7 +69,6 @@
             android:layout_marginLeft="110dp"
             android:layout_marginTop="270dp"
             ></Button>
--->
     </FrameLayout>
 
 
@@ -109,7 +108,7 @@
         >
 
         <Button
-            android:id="@+id/moveStamp"
+            android:id="@+id/moveSearchMap"
             android:layout_width="205dp"
             android:layout_height="match_parent"
             android:background="@drawable/zero_stamp"

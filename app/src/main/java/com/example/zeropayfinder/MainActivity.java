@@ -22,7 +22,7 @@ import androidx.navigation.ui.NavigationUI;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
     TextView tvLogin;
-    Button mbtMap,mbtBook,mbtStamp,mbtTutorial,mbtLogin;
+    Button mbtMap,mbtBook,mbtSearchMap,mbtTutorial,mbtLogin,mbtAccount;
     static String jwttemp;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,9 +70,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         mbtMap= (Button) findViewById(R.id.moveMap);
         mbtBook=(Button)findViewById(R.id.moveBook);
-        mbtStamp=(Button)findViewById(R.id.moveStamp);
+        mbtSearchMap=(Button)findViewById(R.id.moveSearchMap);
         mbtTutorial=(Button)findViewById(R.id.moveTutorial);
         mbtLogin= (Button) findViewById(R.id.Login);
+        mbtAccount= (Button) findViewById(R.id.Accountbtn);
 
 
 
@@ -96,10 +97,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }
         });
 
-        mbtStamp.setOnClickListener(new View.OnClickListener() {
+        mbtSearchMap.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getApplicationContext(),stamp.class);
+                Intent intent = new Intent(getApplicationContext(),SearchMap.class);
                 startActivity(intent);//액티비티 띄우기
             }
         });
@@ -115,6 +116,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getApplicationContext(),login.class);
+                startActivity(intent);//액티비티 띄우기
+            }
+        });
+
+        mbtAccount.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(),stamp.class);
                 startActivity(intent);//액티비티 띄우기
             }
         });
