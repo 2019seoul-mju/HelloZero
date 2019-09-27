@@ -67,7 +67,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             public void onClick(View v) {
                 Intent intent = new Intent(getApplicationContext(),moneyBook.class);
                 intent.putExtra("jwt",jwt);
-                startActivity(intent);//액티비티 띄우기
+                if(jwt == null){
+                    Toast.makeText(MainActivity.this, "로그인이 필요한 서비스입니다.", Toast.LENGTH_SHORT).show();
+                }
+                else startActivity(intent);//액티비티 띄우기
             }
         });
 
