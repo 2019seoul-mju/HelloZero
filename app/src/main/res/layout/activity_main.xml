@@ -25,10 +25,11 @@
         <TextView
             android:id="@+id/tvUserlogin"
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"
+            android:layout_height="43dp"
             android:text="로그인"
             android:textSize="22dp"
-            >
+            android:layout_marginTop="30dp">
+
         </TextView>
 <!--        <Button-->
 <!--            android:id="@+id/btn_popupmenu"-->
@@ -59,7 +60,7 @@
             android:layout_height="80dp"
             android:background="@drawable/login_widget"
             android:layout_marginLeft="18dp"
-            android:layout_marginTop="270dp"
+            android:layout_marginTop="250dp"
             ></Button>
            <Button
             android:id="@+id/Accountbtn"
@@ -67,7 +68,7 @@
             android:layout_height="80dp"
             android:background="@drawable/account_widget"
             android:layout_marginLeft="110dp"
-            android:layout_marginTop="270dp"
+            android:layout_marginTop="250dp"
             ></Button>
     </FrameLayout>
 
