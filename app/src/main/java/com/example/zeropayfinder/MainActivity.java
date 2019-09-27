@@ -2,6 +2,7 @@ package com.example.zeropayfinder;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -21,7 +22,7 @@ import androidx.navigation.ui.NavigationUI;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
-    Button mbtMap,mbtBook,mbtStamp,mbtTutorial;
+    Button mbtMap,mbtBook,mbtStamp,mbtTutorial,mbtLogin;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,6 +50,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         mbtBook=(Button)findViewById(R.id.moveBook);
         mbtStamp=(Button)findViewById(R.id.moveStamp);
         mbtTutorial=(Button)findViewById(R.id.moveTutorial);
+        mbtLogin= (Button) findViewById(R.id.Login);
 
 
 
@@ -84,7 +86,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 startActivity(intent);//액티비티 띄우기
             }
         });
-
+        mbtLogin.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(),login.class);
+                startActivity(intent);//액티비티 띄우기
+            }
+        });
 
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
@@ -125,13 +133,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             // TODO Auto-generated method stub
             switch( item.getItemId() ){//눌러진 MenuItem의 Item Id를 얻어와 식별
                 case R.id.Login:
-                    Toast.makeText(MainActivity.this, "SAVE", Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent(getApplicationContext(),login.class);
+                    startActivity(intent);//액티비티 띄우기
                     break;
                 case R.id.Join:
-                    Toast.makeText(MainActivity.this, "SEARCH", Toast.LENGTH_SHORT).show();
+                   Intent intent2 = new Intent(getApplicationContext(),join.class);
+                     startActivity(intent2);//액티비티 띄우기
                     break;
                 case R.id.Logout:
-                    Toast.makeText(MainActivity.this, "SETTING", Toast.LENGTH_SHORT).show();
+                    Intent intent3 = new Intent(getApplicationContext(),MainActivity.class);
+                  startActivity(intent3);//액티비티 띄우기
                     break;
             }
 
@@ -154,23 +165,21 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     public boolean onOptionsItemSelected(MenuItem item){
         int id = item.getItemId();
-        //or switch문을 이용하면 될듯 하다.
-        if (id == android.R.id.home) {
-            Toast.makeText(this, "홈아이콘 클릭", Toast.LENGTH_SHORT).show();
+        //Login
+        if (id == R.id.Login) {
+
             return true;
         }
-        //로그인
-        if (id == R.id.navigation_home) {
-
-            Intent intent = new Intent(getApplicationContext(),login.class);
-            startActivity(intent);
+        //Join
+        if (id == R.id.Join) {
 
             return true;
         }
         //회원가입
         if (id == R.id.navigation_dashboard) {
-            Intent intent = new Intent(getApplicationContext(),join.class);
-            startActivity(intent);
+//            Intent intent = new Intent(getApplicationContext(),Map.class);
+//            startActivity(intent);//액티비티 띄우기
+//            startActivity(intent);
 
             return true;
         }
