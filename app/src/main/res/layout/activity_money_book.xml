@@ -6,34 +6,65 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="48px"
+        android:background="#001b72">
+
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="55dp"
+        android:background="#003da7">
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="가계부"
+            android:textSize="20dp"
+            android:gravity="center_horizontal"
+            android:layout_marginTop="10dp"
+            android:textColor="#ffffff"
+            >
+        </TextView>
+    </LinearLayout>
 
     <!--달력보기, 총 수입, 총 지출 바-->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+   >
 
         <!--총 수입, 총 지출 테이블-->
         <TableLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:padding="6dp">
+            android:layout_height="70dp"
+            android:padding="6dp"
+            android:background="#ffffff"
+            >
 
             <!--두번째 행-->
-            <TableRow>
+            <TableRow android:layout_width="367dp">
 
                 <!--첫번째 셀-->
                 <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="40dp"
                     android:layout_weight="0.5"
-                    android:gravity="end"
-                    android:text="총 지출 : " />
+                    android:text="총 지출 : "
+                    android:gravity="center"
+                    android:textColor="#000000" />
 
                 <!--두번째 셀 : 총 지출 값 출력-->
                 <TextView
                     android:id="@+id/cost_sum"
+                    android:layout_height="50dp"
                     android:layout_weight="2"
-                    android:textColor="#ff0000" />
+                    android:gravity="center_vertical|right"
+                    android:textColor="#003da7"
+                    android:textSize="35dp"
+                    android:layout_marginTop="9dp"/>
             </TableRow>
         </TableLayout>
 
@@ -56,19 +87,22 @@
                 <TextView
                     android:layout_weight="1.5"
                     android:gravity="center"
-                    android:text="내용" />
+                    android:text="내용"
+                    android:background="#dad9d7"/>
 
                 <!-- 두번째 셀 : 금액-->
                 <TextView
                     android:layout_weight="1.5"
                     android:gravity="center"
-                    android:text="금액" />
+                    android:text="금액"
+                    android:background="#eeeeee"/>
 
                 <!-- 세번째 셀 : 금액-->
                 <TextView
                     android:layout_weight="1.5"
                     android:gravity="center"
-                    android:text="날짜" />
+                    android:text="날짜"
+                    android:background="#dad9d7"/>
 
             </TableRow>
         </TableLayout>
@@ -115,7 +149,9 @@
             style="@style/Widget.AppCompat.Button.Borderless"
             android:layout_width="50dp"
             android:layout_height="wrap_content"
-            android:text="지출" />
+            android:background="#003da7"
+            android:text="입력"
+            android:textColor="#ffffff"/>
 
     </LinearLayout>
 
