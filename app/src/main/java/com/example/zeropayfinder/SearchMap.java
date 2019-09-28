@@ -177,29 +177,6 @@ public class SearchMap extends FragmentActivity implements OnMapReadyCallback,Ac
             @Override
             public void onClick(View v) {
                 ConnectServer_get(Location_name.getText().toString());
-
-                if(Location_result != null){
-                    mMap.clear();
-                    Gson gson = new Gson();
-                    SearchMap.LocationGson info = gson.fromJson(Location_result, SearchMap.LocationGson.class);
-                    for(int i = 0; i< info.result.size(); i++){
-                        if(info.result.get(i).Franchise_Long != null && info.result.get(i).Franchise_Lat != null ) {
-                        LatLng LatLng = new LatLng(Double.parseDouble(info.result.get(i).Franchise_Long), Double.parseDouble(info.result.get(i).Franchise_Lat));
-                            String markerSnippet = "도로명 주소:" + String.valueOf(info.result.get(i).Franchise_RoadLoc) + "\n"
-                                    + "주소 :" + String.valueOf(info.result.get(i).Franchise_State) + " " + String.valueOf(info.result.get(i).Franchise_Loc) + "\n"
-                                    + "소개 :" + String.valueOf(info.result.get(i).Franchise_Desc);
-                            MarkerOptions markerOptions = new MarkerOptions();
-                            markerOptions.position(LatLng);
-                            markerOptions.title(info.result.get(i).Franchise_Name);
-                            markerOptions.snippet(markerSnippet);
-                            markerOptions.draggable(true);
-                            mMap.addMarker(markerOptions);
-                        }
-                    }
-                } else {
-                    Toast.makeText(getApplicationContext(), "잠시만 기다려주세요!", Toast.LENGTH_SHORT).show();
-                }
-
             }
         });
     }
@@ -379,7 +356,7 @@ public class SearchMap extends FragmentActivity implements OnMapReadyCallback,Ac
         markerOptions.snippet(markerSnippet);
         markerOptions.draggable(true);
         markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED));
-        currentMarker = mMap.addMarker(markerOptions);
+        //currentMarker = mMap.addMarker(markerOptions);
 
         CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(DEFAULT_LOCATION, 15);
         mMap.moveCamera(cameraUpdate);
@@ -522,29 +499,29 @@ public class SearchMap extends FragmentActivity implements OnMapReadyCallback,Ac
         }
     }
 
-//    public void Addmarker(String Location){
-//        if(Location_result != null){
-//            mMap.clear();
-//            Gson gson = new Gson();
-//            SearchMap.LocationGson info = gson.fromJson(Location_result, SearchMap.LocationGson.class);
-//            for(int i = 0; i< info.result.size(); i++){
-//                if(info.result.get(i).Franchise_Long != null && info.result.get(i).Franchise_Lat != null ) {
-//                    LatLng LatLng = new LatLng(Double.parseDouble(info.result.get(i).Franchise_Long), Double.parseDouble(info.result.get(i).Franchise_Lat));
-//                    String markerSnippet = "도로명 주소:" + String.valueOf(info.result.get(i).Franchise_RoadLoc) + "\n"
-//                            + "주소 :" + String.valueOf(info.result.get(i).Franchise_State) + " " + String.valueOf(info.result.get(i).Franchise_Loc) + "\n"
-//                            + "소개 :" + String.valueOf(info.result.get(i).Franchise_Desc);
-//                    MarkerOptions markerOptions = new MarkerOptions();
-//                    markerOptions.position(LatLng);
-//                    markerOptions.title(info.result.get(i).Franchise_Name);
-//                    markerOptions.snippet(markerSnippet);
-//                    markerOptions.draggable(true);
-//                    mMap.addMarker(markerOptions);
-//                }
-//            }
-//        } else {
-//            Toast.makeText(getApplicationContext(), "잠시만 기다려주세요!", Toast.LENGTH_SHORT).show();
-//        }
-//    }
+    public void Addmarker(String Location){
+            mMap.clear();
+            Gson gson = new Gson();
+            SearchMap.LocationGson info = gson.fromJson(Location_result, SearchMap.LocationGson.class);
+            if(info.result.size() != 0) {
+                for (int i = 0; i < info.result.size(); i++) {
+                    if (info.result.get(i).Franchise_Long != null && info.result.get(i).Franchise_Lat != null) {
+                        LatLng LatLng = new LatLng(Double.parseDouble(info.result.get(i).Franchise_Long), Double.parseDouble(info.result.get(i).Franchise_Lat));
+                        String markerSnippet = "도로명 주소:" + String.valueOf(info.result.get(i).Franchise_RoadLoc) + "\n"
+                                + "주소 :" + String.valueOf(info.result.get(i).Franchise_State) + " " + String.valueOf(info.result.get(i).Franchise_Loc) + "\n"
+                                + "소개 :" + String.valueOf(info.result.get(i).Franchise_Desc);
+                        MarkerOptions markerOptions = new MarkerOptions();
+                        markerOptions.position(LatLng);
+                        markerOptions.title(info.result.get(i).Franchise_Name);
+                        markerOptions.snippet(markerSnippet);
+                        markerOptions.draggable(true);
+                        mMap.addMarker(markerOptions);
+                    }
+                }
+            } else {
+                Toast.makeText(getApplicationContext(), "가맹점이 없습니다.", Toast.LENGTH_SHORT).show();
+            }
+    }
     public void ConnectServer_get(String search){
         SearchMap.ConnectServer connectServerGet = new SearchMap.ConnectServer();
         try {
@@ -599,7 +576,18 @@ public class SearchMap extends FragmentActivity implements OnMapReadyCallback,Ac
                 public void onResponse(Call call, Response response) throws IOException {
 
                     Location_result = response.body().string();
-
+                    new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                                // 현재 UI 스레드가 아니기 때문에 메시지 큐에 Runnable을 등록 함
+                                runOnUiThread(new Runnable() {
+                                    public void run() {
+                                    // 메시지 큐에 저장될 메시지의 내용
+                                        Addmarker(Location_result);
+                                    }
+                                });
+                        }
+                    }).start();
                 }
             });
         }
