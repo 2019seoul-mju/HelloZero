@@ -1,6 +1,7 @@
 package com.example.zeropayfinder;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.FragmentActivity;
 import androidx.core.app.ActivityCompat;
@@ -18,6 +19,7 @@ import android.Manifest;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.drawable.Drawable;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
@@ -35,6 +37,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.DataSource;
+import com.bumptech.glide.load.engine.GlideException;
+import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.target.Target;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
@@ -97,11 +103,6 @@ public class Map extends FragmentActivity implements OnMapReadyCallback,Activity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-//        locationCallback;
-//
-//        Log.d(TAG, "onCreate :" + mCurrentLocatiion.getLatitude());
-
 
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON,
                 WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
@@ -208,6 +209,7 @@ public class Map extends FragmentActivity implements OnMapReadyCallback,Activity
                 if(location != null) {
                     Map.ConnectServer connectServerGet = new Map.ConnectServer();
                     //connectServerGet.requestGet("http://15.164.118.95/hello/findZero/"+ location.getLongitude() + "/" + location.getLatitude(), "location");
+                    //앱 제출전에 위에거로 변경
                     connectServerGet.requestGet("http://15.164.118.95/hello/findZero/127.0323094/37.52557938", "location");
                 } else{
                     Toast.makeText(getApplicationContext(), "현재위치를 확인중입니다. 잠시만 기다려주세요.", Toast.LENGTH_SHORT).show();
@@ -217,17 +219,14 @@ public class Map extends FragmentActivity implements OnMapReadyCallback,Activity
 
         // Setting a custom info window adapter for the google map
         googleMap.setInfoWindowAdapter(new GoogleMap.InfoWindowAdapter() {
+            Marker marker;
+            boolean isShowWindow = false;
 
             // Use default InfoWindow frame
             @Override
             public View getInfoWindow(Marker arg0) {
-                return null;
-            }
-
-            // Defines the contents of the InfoWindow
-            @Override
-            public View getInfoContents(Marker arg0) {
-                View v = null;
+                this.marker = arg0;
+                View v = getLayoutInflater().inflate(R.layout.custom_infowindow, null);
                 try {
 
                     // Getting view from the layout file info_window_layout
@@ -235,9 +234,36 @@ public class Map extends FragmentActivity implements OnMapReadyCallback,Activity
                     // Getting reference to the TextView to set latitude
                     String[] word = arg0.getTitle().split(",");
                     ImageView Marker_Img = (ImageView) v.findViewById(R.id.Marker_Img);
-//                    Marker_Img.setImageURI(uri);
                     String imageUrl = word[1].replace( "\\", "");
-                    Glide.with(Map.this).load(imageUrl).into(Marker_Img);
+                    Glide.with(Map.this).load(imageUrl).listener(new RequestListener<Drawable>() {
+                        @Override
+                        public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
+
+                            return false;
+                        }
+
+                        @Override
+                        public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
+                            if (isShowWindow == false) {
+                                new Thread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        // 현재 UI 스레드가 아니기 때문에 메시지 큐에 Runnable을 등록 함
+                                        runOnUiThread(new Runnable() {
+                                            public void run() {
+                                                // 메시지 큐에 저장될 메시지의 내용
+                                                marker.showInfoWindow();
+                                            }
+                                        });
+                                    }
+                                }).start();
+                                isShowWindow = true;
+                            } else {
+                                isShowWindow = false;
+                            }
+                            return false;
+                        }
+                    }).into(Marker_Img);
                     TextView Marker_Title = (TextView) v.findViewById(R.id.Marker_Title);
                     Marker_Title.setText(word[0]);
                     TextView Marker_Snippet = (TextView) v.findViewById(R.id.Marker_Snippet);
@@ -248,6 +274,12 @@ public class Map extends FragmentActivity implements OnMapReadyCallback,Activity
                 }
 
                 return v;
+            }
+
+            // Defines the contents of the InfoWindow
+            @Override
+            public View getInfoContents(Marker arg0) {
+                return null;
             }
         });
 
@@ -291,10 +323,6 @@ public class Map extends FragmentActivity implements OnMapReadyCallback,Activity
                         + " 경도:" + String.valueOf(location.getLongitude());
 
                 Log.d(TAG, "onLocationResult : " + markerSnippet);
-
-
-                //현재 위치에 마커 생성하고 이동
-                setCurrentLocation(location, markerTitle, markerSnippet);
 
 
 
@@ -420,31 +448,6 @@ public class Map extends FragmentActivity implements OnMapReadyCallback,Activity
         return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)
                 || locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
     }
-
-
-    public void setCurrentLocation(Location location, String markerTitle, String markerSnippet) {
-
-
-        if (currentMarker != null) currentMarker.remove();
-
-
-        LatLng currentLatLng = new LatLng(location.getLatitude(), location.getLongitude());
-
-        MarkerOptions markerOptions = new MarkerOptions();
-        markerOptions.position(currentLatLng);
-        markerOptions.title(markerTitle);
-        markerOptions.snippet(markerSnippet);
-        markerOptions.draggable(true);
-
-
-//        currentMarker = mMap.addMarker(markerOptions);
-
-        Map.ConnectServer connectServerGet = new Map.ConnectServer();
-//        connectServerGet.requestGet("http://15.164.118.95/hello/findZero/"+ location.getLongitude() + "/" + location.getLatitude(), "location");
-//        connectServerGet.requestGet("http://15.164.118.95/hello/findZero/127.0323094/37.52557938", "location");
-
-    }
-
 
     public void setDefaultLocation() {
 

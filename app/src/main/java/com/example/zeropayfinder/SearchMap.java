@@ -1,11 +1,14 @@
 package com.example.zeropayfinder;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.HttpUrl;
@@ -17,6 +20,7 @@ import android.Manifest;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.drawable.Drawable;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
@@ -24,6 +28,8 @@ import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.Looper;
 import android.util.Log;
+import android.view.GestureDetector;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
@@ -33,6 +39,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.DataSource;
+import com.bumptech.glide.load.engine.GlideException;
+import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.target.Target;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
@@ -50,20 +60,24 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.gson.Gson;
+import com.google.maps.android.clustering.ClusterManager;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
 public class SearchMap extends FragmentActivity implements OnMapReadyCallback,ActivityCompat.OnRequestPermissionsResultCallback {
 
     private GoogleMap mMap;
+    private ClusterManager<MyItem> mClusterManger;
     private Marker currentMarker = null;
     public Button btnSearchLocation;
     private String Location_result;
     private EditText Location_name;
+    private RecyclerAdapter adapter;
 
     private static final String TAG = "googlemap_search";
     private static final int GPS_ENABLE_REQUEST_CODE = 2001;
@@ -94,6 +108,7 @@ public class SearchMap extends FragmentActivity implements OnMapReadyCallback,Ac
                 WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         setContentView(R.layout.activity_searchmap);
         mLayout = findViewById(R.id.Searchmap);
+        init();
 
         Location_name = (EditText) findViewById(R.id.LocationText);
 
@@ -113,6 +128,58 @@ public class SearchMap extends FragmentActivity implements OnMapReadyCallback,Ac
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.Searchmap);
         mapFragment.getMapAsync(this);
+    }
+
+    private void init() {
+        RecyclerView recyclerView = findViewById(R.id.recyclerView);
+
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
+        recyclerView.setLayoutManager(linearLayoutManager);
+
+        adapter = new RecyclerAdapter();
+        recyclerView.setAdapter(adapter);
+
+        final GestureDetector gestureDetector = new GestureDetector(SearchMap.this,new GestureDetector.SimpleOnGestureListener()
+        {
+            @Override
+            public boolean onSingleTapUp(MotionEvent e)
+            {
+                return true;
+            }
+        });
+
+        recyclerView.addOnItemTouchListener(new RecyclerView.OnItemTouchListener()
+        {
+            @Override
+            public boolean onInterceptTouchEvent(RecyclerView rv, MotionEvent e)
+            {
+
+                View child = rv.findChildViewUnder(e.getX(), e.getY());
+                if(child!=null&&gestureDetector.onTouchEvent(e)) {
+                    TextView tv = (TextView) rv.getChildViewHolder(child).itemView.findViewById(R.id.textView3);
+                    Toast.makeText(getApplication(),tv.getText().toString(), Toast.LENGTH_SHORT).show();
+                    String[] word =  tv.getText().toString().split(",");
+                    LatLng currentLatLng = new LatLng(Double.parseDouble(word[0]), Double.parseDouble(word[1]));
+
+                    setCurrentLocation(currentLatLng);
+
+                    Log.d(TAG, "" + rv.getChildViewHolder(child).itemView.findViewById(R.id.textView3));
+                }
+                return false;
+            }
+
+            @Override
+            public void onTouchEvent(RecyclerView rv, MotionEvent e) {
+
+            }
+
+            @Override
+            public void onRequestDisallowInterceptTouchEvent(boolean disallowIntercept) {
+
+            }
+        });
+
+
     }
 
     @Override
@@ -179,6 +246,77 @@ public class SearchMap extends FragmentActivity implements OnMapReadyCallback,Ac
                 ConnectServer_get(Location_name.getText().toString());
             }
         });
+
+        mClusterManger = new ClusterManager<>(this, mMap);
+        mMap.setOnCameraIdleListener(mClusterManger);
+        mMap.setOnMarkerClickListener(mClusterManger);
+
+        googleMap.setInfoWindowAdapter(new GoogleMap.InfoWindowAdapter() {
+            Marker marker;
+            boolean isShowWindow = false;
+
+            // Use default InfoWindow frame
+            @Override
+            public View getInfoWindow(Marker arg0) {
+                this.marker = arg0;
+                View v = getLayoutInflater().inflate(R.layout.custom_infowindow, null);
+                try {
+
+                    // Getting view from the layout file info_window_layout
+                    v = getLayoutInflater().inflate(R.layout.custom_infowindow, null);
+                    // Getting reference to the TextView to set latitude
+                    String[] word = arg0.getTitle().split(",");
+                    ImageView Marker_Img = (ImageView) v.findViewById(R.id.Marker_Img);
+                    String imageUrl = word[1].replace( "\\", "");
+                    Glide.with(SearchMap.this).load(imageUrl).listener(new RequestListener<Drawable>() {
+                        @Override
+                        public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
+
+                            return false;
+                        }
+
+                        @Override
+                        public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
+                            if (isShowWindow == false) {
+                                new Thread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        // 현재 UI 스레드가 아니기 때문에 메시지 큐에 Runnable을 등록 함
+                                        runOnUiThread(new Runnable() {
+                                            public void run() {
+                                                // 메시지 큐에 저장될 메시지의 내용
+                                                marker.showInfoWindow();
+                                            }
+                                        });
+                                    }
+                                }).start();
+                                isShowWindow = true;
+                            } else {
+                                isShowWindow = false;
+                            }
+                            return false;
+                        }
+                    }).into(Marker_Img);
+                    TextView Marker_Title = (TextView) v.findViewById(R.id.Marker_Title);
+                    Marker_Title.setText(word[0]);
+                    TextView Marker_Snippet = (TextView) v.findViewById(R.id.Marker_Snippet);
+                    Marker_Snippet.setText(arg0.getSnippet());
+
+                } catch (Exception ev) {
+                    System.out.print(ev.getMessage());
+                }
+
+                return v;
+            }
+
+            // Defines the contents of the InfoWindow
+            @Override
+            public View getInfoContents(Marker arg0) {
+                return null;
+            }
+        });
+
+//        addItems();
     }
 
     LocationCallback locationCallback = new LocationCallback() {
@@ -201,12 +339,6 @@ public class SearchMap extends FragmentActivity implements OnMapReadyCallback,Ac
                         + " 경도:" + String.valueOf(location.getLongitude());
 
                 Log.d(TAG, "onLocationResult : " + markerSnippet);
-
-
-                //현재 위치에 마커 생성하고 이동
-                setCurrentLocation(location, markerTitle, markerSnippet);
-
-
 
                 mCurrentLocatiion = location;
             }
@@ -268,6 +400,7 @@ public class SearchMap extends FragmentActivity implements OnMapReadyCallback,Ac
 
     }
 
+
     @Override
     protected void onStop() {
 
@@ -318,25 +451,6 @@ public class SearchMap extends FragmentActivity implements OnMapReadyCallback,Ac
 
         return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)
                 || locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
-    }
-
-
-    public void setCurrentLocation(Location location, String markerTitle, String markerSnippet) {
-
-
-        if (currentMarker != null) currentMarker.remove();
-
-
-        LatLng currentLatLng = new LatLng(location.getLatitude(), location.getLongitude());
-
-        MarkerOptions markerOptions = new MarkerOptions();
-        markerOptions.position(currentLatLng);
-        markerOptions.title(markerTitle);
-        markerOptions.snippet(markerSnippet);
-        markerOptions.draggable(true);
-
-//        currentMarker = mMap.addMarker(markerOptions);
-
     }
 
     public void setDefaultLocation() {
@@ -512,11 +626,21 @@ public class SearchMap extends FragmentActivity implements OnMapReadyCallback,Ac
                                 + "소개 :" + String.valueOf(info.result.get(i).Franchise_Desc);
                         MarkerOptions markerOptions = new MarkerOptions();
                         markerOptions.position(LatLng);
-                        markerOptions.title(info.result.get(i).Franchise_Name);
+                        markerOptions.title(info.result.get(i).Franchise_Name + "," + info.result.get(i).Franchise_Uri);
                         markerOptions.snippet(markerSnippet);
                         markerOptions.draggable(true);
                         mMap.addMarker(markerOptions);
+                        MyItem offsetItem = new MyItem(Double.parseDouble(info.result.get(i).Franchise_Long), Double.parseDouble(info.result.get(i).Franchise_Lat));
+                        mClusterManger.addItem(offsetItem);
+                        Data data = new Data();
+                        data.setTitle(info.result.get(i).Franchise_Name);
+                        data.setContent(markerSnippet);
+                        data.setLatlng(info.result.get(i).Franchise_Long+ "," +info.result.get(i).Franchise_Lat);
+                        data.setResId(info.result.get(i).Franchise_Uri.replace( "\\", ""));
+                        adapter.addItem(data);
+
                     }
+                    adapter.notifyDataSetChanged();
                 }
             } else {
                 Toast.makeText(getApplicationContext(), "가맹점이 없습니다.", Toast.LENGTH_SHORT).show();
@@ -532,6 +656,11 @@ public class SearchMap extends FragmentActivity implements OnMapReadyCallback,Ac
         connectServerGet.requestGet("http://15.164.118.95/hello/searchZero/"+ search, "location");
     }
 
+    public void setCurrentLocation(LatLng currentLatLng) {
+        CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLng(currentLatLng);
+        mMap.moveCamera(cameraUpdate);
+    }
+
     public class LocationGson {
         List<Location_info> result;
     }
@@ -545,6 +674,7 @@ public class SearchMap extends FragmentActivity implements OnMapReadyCallback,Ac
         String Franchise_Desc;
         String Franchise_Lat;
         String Franchise_Long;
+        String Franchise_Uri;
     }
 
     class ConnectServer {
