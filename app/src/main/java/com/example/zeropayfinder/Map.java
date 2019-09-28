@@ -22,6 +22,7 @@ import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -29,9 +30,11 @@ import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
@@ -214,7 +217,7 @@ public class Map extends FragmentActivity implements OnMapReadyCallback,Activity
                                 + "소개 :" + String.valueOf(info.result.get(i).Franchise_Desc);
                         MarkerOptions markerOptions = new MarkerOptions();
                         markerOptions.position(LatLng);
-                        markerOptions.title(info.result.get(i).Franchise_Name);
+                        markerOptions.title(info.result.get(i).Franchise_Name + "," + info.result.get(i).Franchise_Uri);
                         markerOptions.snippet(markerSnippet);
                         markerOptions.draggable(true);
                         mMap.addMarker(markerOptions);
@@ -246,10 +249,14 @@ public class Map extends FragmentActivity implements OnMapReadyCallback,Activity
 
                     // Getting view from the layout file info_window_layout
                     v = getLayoutInflater().inflate(R.layout.custom_infowindow, null);
-
                     // Getting reference to the TextView to set latitude
+                    String[] word = arg0.getTitle().split(",");
+                    ImageView Marker_Img = (ImageView) v.findViewById(R.id.Marker_Img);
+//                    Marker_Img.setImageURI(uri);
+                    String imageUrl = word[1].replace( "\\", "");
+                    Glide.with(Map.this).load(imageUrl).into(Marker_Img);
                     TextView Marker_Title = (TextView) v.findViewById(R.id.Marker_Title);
-                    Marker_Title.setText(arg0.getTitle());
+                    Marker_Title.setText(word[0]);
                     TextView Marker_Snippet = (TextView) v.findViewById(R.id.Marker_Snippet);
                     Marker_Snippet.setText(arg0.getSnippet());
 
@@ -435,16 +442,16 @@ public class Map extends FragmentActivity implements OnMapReadyCallback,Activity
     public void setCurrentLocation(Location location, String markerTitle, String markerSnippet) {
 
 
-//        if (currentMarker != null) currentMarker.remove();
-//
-//
-//        LatLng currentLatLng = new LatLng(location.getLatitude(), location.getLongitude());
-//
-//        MarkerOptions markerOptions = new MarkerOptions();
-//        markerOptions.position(currentLatLng);
-//        markerOptions.title(markerTitle);
-//        markerOptions.snippet(markerSnippet);
-//        markerOptions.draggable(true);
+        if (currentMarker != null) currentMarker.remove();
+
+
+        LatLng currentLatLng = new LatLng(location.getLatitude(), location.getLongitude());
+
+        MarkerOptions markerOptions = new MarkerOptions();
+        markerOptions.position(currentLatLng);
+        markerOptions.title(markerTitle);
+        markerOptions.snippet(markerSnippet);
+        markerOptions.draggable(true);
 
 
 //        currentMarker = mMap.addMarker(markerOptions);
@@ -633,6 +640,7 @@ public class Map extends FragmentActivity implements OnMapReadyCallback,Activity
         String Franchise_Desc;
         String Franchise_Lat;
         String Franchise_Long;
+        String Franchise_Uri;
     }
 
     class ConnectServer {

@@ -28,8 +28,11 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
@@ -49,6 +52,8 @@ import com.google.android.material.snackbar.Snackbar;
 import com.google.gson.Gson;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.List;
 import java.util.Locale;
 
@@ -171,26 +176,26 @@ public class SearchMap extends FragmentActivity implements OnMapReadyCallback,Ac
         btnSearchLocation.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                ConnectServer_get(Location_name.getText().toString());
 
                 if(Location_result != null){
+                    mMap.clear();
                     Gson gson = new Gson();
-                    Log.d("aaaa", "ㅁㅁㄴㅇㄹ" + Location_result);
                     SearchMap.LocationGson info = gson.fromJson(Location_result, SearchMap.LocationGson.class);
                     for(int i = 0; i< info.result.size(); i++){
+                        if(info.result.get(i).Franchise_Long != null && info.result.get(i).Franchise_Lat != null ) {
                         LatLng LatLng = new LatLng(Double.parseDouble(info.result.get(i).Franchise_Long), Double.parseDouble(info.result.get(i).Franchise_Lat));
-                        String markerSnippet = "도로명 주소:" + String.valueOf(info.result.get(i).Franchise_RoadLoc)+ "\n"
-                                + "주소 :" + String.valueOf(info.result.get(i).Franchise_State) + " " + String.valueOf(info.result.get(i).Franchise_Loc) + "\n"
-                                + "소개 :" + String.valueOf(info.result.get(i).Franchise_Desc);
-                        MarkerOptions markerOptions = new MarkerOptions();
-                        markerOptions.position(LatLng);
-                        markerOptions.title(info.result.get(i).Franchise_Name);
-                        markerOptions.snippet(markerSnippet);
-                        markerOptions.draggable(true);
-                        mMap.addMarker(markerOptions);
+                            String markerSnippet = "도로명 주소:" + String.valueOf(info.result.get(i).Franchise_RoadLoc) + "\n"
+                                    + "주소 :" + String.valueOf(info.result.get(i).Franchise_State) + " " + String.valueOf(info.result.get(i).Franchise_Loc) + "\n"
+                                    + "소개 :" + String.valueOf(info.result.get(i).Franchise_Desc);
+                            MarkerOptions markerOptions = new MarkerOptions();
+                            markerOptions.position(LatLng);
+                            markerOptions.title(info.result.get(i).Franchise_Name);
+                            markerOptions.snippet(markerSnippet);
+                            markerOptions.draggable(true);
+                            mMap.addMarker(markerOptions);
+                        }
                     }
-//                    LatLng currentLatLng = new LatLng(location.getLatitude(), location.getLongitude());
-//                    CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLng(currentLatLng);
-//                    mMap.moveCamera(cameraUpdate);
                 } else {
                     Toast.makeText(getApplicationContext(), "잠시만 기다려주세요!", Toast.LENGTH_SHORT).show();
                 }
@@ -237,7 +242,6 @@ public class SearchMap extends FragmentActivity implements OnMapReadyCallback,Ac
     private void startLocationUpdates() {
 
         if (!checkLocationServicesStatus()) {
-
             Log.d(TAG, "startLocationUpdates : call showDialogForLocationServiceSetting");
             showDialogForLocationServiceSetting();
         }else {
@@ -343,18 +347,16 @@ public class SearchMap extends FragmentActivity implements OnMapReadyCallback,Ac
     public void setCurrentLocation(Location location, String markerTitle, String markerSnippet) {
 
 
-//        if (currentMarker != null) currentMarker.remove();
-//
-//
-//        LatLng currentLatLng = new LatLng(location.getLatitude(), location.getLongitude());
-//
-//        MarkerOptions markerOptions = new MarkerOptions();
-//        markerOptions.position(currentLatLng);
-//        markerOptions.title(markerTitle);
-//        markerOptions.snippet(markerSnippet);
-//        markerOptions.draggable(true);
+        if (currentMarker != null) currentMarker.remove();
 
-        ConnectServer_get(Location_name.getText().toString().trim());
+
+        LatLng currentLatLng = new LatLng(location.getLatitude(), location.getLongitude());
+
+        MarkerOptions markerOptions = new MarkerOptions();
+        markerOptions.position(currentLatLng);
+        markerOptions.title(markerTitle);
+        markerOptions.snippet(markerSnippet);
+        markerOptions.draggable(true);
 
 //        currentMarker = mMap.addMarker(markerOptions);
 
@@ -519,8 +521,37 @@ public class SearchMap extends FragmentActivity implements OnMapReadyCallback,Ac
                 break;
         }
     }
+
+//    public void Addmarker(String Location){
+//        if(Location_result != null){
+//            mMap.clear();
+//            Gson gson = new Gson();
+//            SearchMap.LocationGson info = gson.fromJson(Location_result, SearchMap.LocationGson.class);
+//            for(int i = 0; i< info.result.size(); i++){
+//                if(info.result.get(i).Franchise_Long != null && info.result.get(i).Franchise_Lat != null ) {
+//                    LatLng LatLng = new LatLng(Double.parseDouble(info.result.get(i).Franchise_Long), Double.parseDouble(info.result.get(i).Franchise_Lat));
+//                    String markerSnippet = "도로명 주소:" + String.valueOf(info.result.get(i).Franchise_RoadLoc) + "\n"
+//                            + "주소 :" + String.valueOf(info.result.get(i).Franchise_State) + " " + String.valueOf(info.result.get(i).Franchise_Loc) + "\n"
+//                            + "소개 :" + String.valueOf(info.result.get(i).Franchise_Desc);
+//                    MarkerOptions markerOptions = new MarkerOptions();
+//                    markerOptions.position(LatLng);
+//                    markerOptions.title(info.result.get(i).Franchise_Name);
+//                    markerOptions.snippet(markerSnippet);
+//                    markerOptions.draggable(true);
+//                    mMap.addMarker(markerOptions);
+//                }
+//            }
+//        } else {
+//            Toast.makeText(getApplicationContext(), "잠시만 기다려주세요!", Toast.LENGTH_SHORT).show();
+//        }
+//    }
     public void ConnectServer_get(String search){
         SearchMap.ConnectServer connectServerGet = new SearchMap.ConnectServer();
+        try {
+            URLEncoder.encode("http://15.164.118.95/hello/searchZero/"+ search,"UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
         connectServerGet.requestGet("http://15.164.118.95/hello/searchZero/"+ search, "location");
     }
 
@@ -568,6 +599,7 @@ public class SearchMap extends FragmentActivity implements OnMapReadyCallback,Ac
                 public void onResponse(Call call, Response response) throws IOException {
 
                     Location_result = response.body().string();
+
                 }
             });
         }
