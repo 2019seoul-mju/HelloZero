@@ -144,8 +144,6 @@ public class Map extends FragmentActivity implements OnMapReadyCallback,Activity
     public void onMapReady(GoogleMap googleMap) {
         Log.d(TAG, "onMapReady :");
         mMap = googleMap;
-//        Map.ConnectServer connectServerGet = new Map.ConnectServer();
-//        connectServerGet.requestGet("http://15.164.118.95/hello/findZero/127.0323094/37.52557938", "location");
 
         // Add a marker in Sydney and move the camera
         Log.d("aaaa", "Response Body is " + Location_result);
@@ -207,28 +205,13 @@ public class Map extends FragmentActivity implements OnMapReadyCallback,Activity
         btnMyLocation.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(Location_result != null){
-                    Gson gson = new Gson();
-                    LocationGson info = gson.fromJson(Location_result, LocationGson.class);
-                    for(int i = 0; i< info.result.size(); i++){
-                        LatLng LatLng = new LatLng(Double.parseDouble(info.result.get(i).Franchise_Long), Double.parseDouble(info.result.get(i).Franchise_Lat));
-                        String markerSnippet = "도로명 주소:" + String.valueOf(info.result.get(i).Franchise_RoadLoc)+ "\n"
-                                + "주소 :" + String.valueOf(info.result.get(i).Franchise_State) + " " + String.valueOf(info.result.get(i).Franchise_Loc) + "\n"
-                                + "소개 :" + String.valueOf(info.result.get(i).Franchise_Desc);
-                        MarkerOptions markerOptions = new MarkerOptions();
-                        markerOptions.position(LatLng);
-                        markerOptions.title(info.result.get(i).Franchise_Name + "," + info.result.get(i).Franchise_Uri);
-                        markerOptions.snippet(markerSnippet);
-                        markerOptions.draggable(true);
-                        mMap.addMarker(markerOptions);
-                    }
-                    LatLng currentLatLng = new LatLng(location.getLatitude(), location.getLongitude());
-                    CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLng(currentLatLng);
-                    mMap.moveCamera(cameraUpdate);
-                } else {
-                    Toast.makeText(getApplicationContext(), "잠시만 기다려주세요!", Toast.LENGTH_SHORT).show();
+                if(location != null) {
+                    Map.ConnectServer connectServerGet = new Map.ConnectServer();
+                    //connectServerGet.requestGet("http://15.164.118.95/hello/findZero/"+ location.getLongitude() + "/" + location.getLatitude(), "location");
+                    connectServerGet.requestGet("http://15.164.118.95/hello/findZero/127.0323094/37.52557938", "location");
+                } else{
+                    Toast.makeText(getApplicationContext(), "현재위치를 확인중입니다. 잠시만 기다려주세요.", Toast.LENGTH_SHORT).show();
                 }
-
             }
         });
 
@@ -458,7 +441,7 @@ public class Map extends FragmentActivity implements OnMapReadyCallback,Activity
 
         Map.ConnectServer connectServerGet = new Map.ConnectServer();
 //        connectServerGet.requestGet("http://15.164.118.95/hello/findZero/"+ location.getLongitude() + "/" + location.getLatitude(), "location");
-        connectServerGet.requestGet("http://15.164.118.95/hello/findZero/127.0323094/37.52557938", "location");
+//        connectServerGet.requestGet("http://15.164.118.95/hello/findZero/127.0323094/37.52557938", "location");
 
     }
 
@@ -480,7 +463,7 @@ public class Map extends FragmentActivity implements OnMapReadyCallback,Activity
         markerOptions.snippet(markerSnippet);
         markerOptions.draggable(true);
         markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED));
-        currentMarker = mMap.addMarker(markerOptions);
+        //currentMarker = mMap.addMarker(markerOptions);
 
         CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(DEFAULT_LOCATION, 15);
         mMap.moveCamera(cameraUpdate);
@@ -627,6 +610,31 @@ public class Map extends FragmentActivity implements OnMapReadyCallback,Activity
         }
     }
 
+    public void Addmarker(String Location){
+        mMap.clear();
+        Gson gson = new Gson();
+        LocationGson info = gson.fromJson(Location_result, LocationGson.class);
+        if(info.result.size() != 0) {
+            for(int i = 0; i< info.result.size(); i++){
+                LatLng LatLng = new LatLng(Double.parseDouble(info.result.get(i).Franchise_Long), Double.parseDouble(info.result.get(i).Franchise_Lat));
+                String markerSnippet = "도로명 주소:" + String.valueOf(info.result.get(i).Franchise_RoadLoc)+ "\n"
+                        + "주소 :" + String.valueOf(info.result.get(i).Franchise_State) + " " + String.valueOf(info.result.get(i).Franchise_Loc) + "\n"
+                        + "소개 :" + String.valueOf(info.result.get(i).Franchise_Desc);
+                MarkerOptions markerOptions = new MarkerOptions();
+                markerOptions.position(LatLng);
+                markerOptions.title(info.result.get(i).Franchise_Name + "," + info.result.get(i).Franchise_Uri);
+                markerOptions.snippet(markerSnippet);
+                markerOptions.draggable(true);
+                mMap.addMarker(markerOptions);
+            }
+            LatLng currentLatLng = new LatLng(location.getLatitude(), location.getLongitude());
+            CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLng(currentLatLng);
+            mMap.moveCamera(cameraUpdate);
+        } else {
+            Toast.makeText(getApplicationContext(), "주변에 제로페이 가맹점이 없습니다.", Toast.LENGTH_SHORT).show();
+        }
+    }
+
     public class LocationGson {
         List<Location_info> result;
     }
@@ -672,6 +680,18 @@ public class Map extends FragmentActivity implements OnMapReadyCallback,Activity
                 public void onResponse(Call call, Response response) throws IOException {
 
                     Location_result = response.body().string();
+                    new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            // 현재 UI 스레드가 아니기 때문에 메시지 큐에 Runnable을 등록 함
+                            runOnUiThread(new Runnable() {
+                                public void run() {
+                                    // 메시지 큐에 저장될 메시지의 내용
+                                    Addmarker(Location_result);
+                                }
+                            });
+                        }
+                    }).start();
                 }
             });
         }
