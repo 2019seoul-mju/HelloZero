@@ -46,7 +46,8 @@
             android:includeFontPadding="false"
             android:text="content"
             android:textColor="@android:color/darker_gray"
-            android:textSize="13sp" />
+            android:textSize="13sp"
+            android:visibility="invisible"/>
     </LinearLayout>
 
 </LinearLayout>

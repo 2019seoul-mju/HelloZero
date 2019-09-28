@@ -100,7 +100,8 @@ public class SearchMap extends FragmentActivity implements OnMapReadyCallback,Ac
     private Location location;
 
     private View mLayout;
-
+    public String jwt2;
+    Intent intent;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -108,10 +109,11 @@ public class SearchMap extends FragmentActivity implements OnMapReadyCallback,Ac
                 WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         setContentView(R.layout.activity_searchmap);
         mLayout = findViewById(R.id.Searchmap);
-        init();
 
         Location_name = (EditText) findViewById(R.id.LocationText);
-
+        intent=new Intent(this.getIntent());
+        final String jwt=intent.getStringExtra("jwt");
+        jwt2 = jwt;
         locationRequest = new LocationRequest()
                 .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
                 .setInterval(UPDATE_INTERVAL_MS)
@@ -134,6 +136,7 @@ public class SearchMap extends FragmentActivity implements OnMapReadyCallback,Ac
         RecyclerView recyclerView = findViewById(R.id.recyclerView);
 
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
+        recyclerView.removeAllViewsInLayout();
         recyclerView.setLayoutManager(linearLayoutManager);
 
         adapter = new RecyclerAdapter();
@@ -157,7 +160,7 @@ public class SearchMap extends FragmentActivity implements OnMapReadyCallback,Ac
                 View child = rv.findChildViewUnder(e.getX(), e.getY());
                 if(child!=null&&gestureDetector.onTouchEvent(e)) {
                     TextView tv = (TextView) rv.getChildViewHolder(child).itemView.findViewById(R.id.textView3);
-                    Toast.makeText(getApplication(),tv.getText().toString(), Toast.LENGTH_SHORT).show();
+
                     String[] word =  tv.getText().toString().split(",");
                     LatLng currentLatLng = new LatLng(Double.parseDouble(word[0]), Double.parseDouble(word[1]));
 
@@ -244,12 +247,34 @@ public class SearchMap extends FragmentActivity implements OnMapReadyCallback,Ac
             @Override
             public void onClick(View v) {
                 ConnectServer_get(Location_name.getText().toString());
+                init();
+            }
+        });
+
+        googleMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+            @Override
+            public boolean onMarkerClick(Marker marker) {
+                // 마커 클릭시 호출되는 콜백 메서드
+                String[] word = marker.getTitle().split(",");
+                mapdetail.setFranchise_no(Integer.parseInt(word[2]));
+                mapdetail.setFranchise_name(word[0]);
+                return false;
             }
         });
 
         mClusterManger = new ClusterManager<>(this, mMap);
         mMap.setOnCameraIdleListener(mClusterManger);
         mMap.setOnMarkerClickListener(mClusterManger);
+
+        googleMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
+            @Override
+            public void onInfoWindowClick(Marker marker) {
+
+                intent = new Intent(getApplicationContext(),mapdetail.class);
+                intent.putExtra("jwt",jwt2);
+                startActivity(intent);//액티비티 띄우기
+            }
+        });
 
         googleMap.setInfoWindowAdapter(new GoogleMap.InfoWindowAdapter() {
             Marker marker;
@@ -301,7 +326,8 @@ public class SearchMap extends FragmentActivity implements OnMapReadyCallback,Ac
                     Marker_Title.setText(word[0]);
                     TextView Marker_Snippet = (TextView) v.findViewById(R.id.Marker_Snippet);
                     Marker_Snippet.setText(arg0.getSnippet());
-
+                    mapdetail.setFranchise_no(Integer.parseInt(word[2]));
+                    mapdetail.setFranchise_name(word[0]);
                 } catch (Exception ev) {
                     System.out.print(ev.getMessage());
                 }
@@ -626,7 +652,7 @@ public class SearchMap extends FragmentActivity implements OnMapReadyCallback,Ac
                                 + "소개 :" + String.valueOf(info.result.get(i).Franchise_Desc);
                         MarkerOptions markerOptions = new MarkerOptions();
                         markerOptions.position(LatLng);
-                        markerOptions.title(info.result.get(i).Franchise_Name + "," + info.result.get(i).Franchise_Uri);
+                        markerOptions.title(info.result.get(i).Franchise_Name + "," + info.result.get(i).Franchise_Uri + "," + info.result.get(i).Franchise_No);
                         markerOptions.snippet(markerSnippet);
                         markerOptions.draggable(true);
                         mMap.addMarker(markerOptions);
@@ -666,7 +692,7 @@ public class SearchMap extends FragmentActivity implements OnMapReadyCallback,Ac
     }
 
     public class Location_info {
-
+        int Franchise_No;
         String Franchise_RoadLoc;
         String Franchise_Loc;
         String Franchise_State;

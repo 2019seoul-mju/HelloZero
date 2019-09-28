@@ -96,7 +96,8 @@ public class Map extends FragmentActivity implements OnMapReadyCallback,Activity
     private LocationRequest locationRequest;
     private Location location;
     private String Location_result;
-
+    public String jwt2;
+    Intent intent;
     private View mLayout;  // Snackbar 사용하기 위해서는 View가 필요합니다.
     // (참고로 Toast에서는 Context가 필요했습니다.)
 
@@ -110,7 +111,9 @@ public class Map extends FragmentActivity implements OnMapReadyCallback,Activity
         setContentView(R.layout.activity_map);
 
         mLayout = findViewById(R.id.map);
-
+        intent=new Intent(this.getIntent());
+        final String jwt=intent.getStringExtra("jwt");
+        jwt2 = jwt;
         locationRequest = new LocationRequest()
                 .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
                 .setInterval(UPDATE_INTERVAL_MS)
@@ -217,6 +220,16 @@ public class Map extends FragmentActivity implements OnMapReadyCallback,Activity
             }
         });
 
+        googleMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+            @Override
+            public boolean onMarkerClick(Marker marker) {
+                // 마커 클릭시 호출되는 콜백 메서드
+                String[] word = marker.getTitle().split(",");
+                mapdetail.setFranchise_no(Integer.parseInt(word[2]));
+                mapdetail.setFranchise_name(word[0]);
+                return false;
+            }
+        });
         // Setting a custom info window adapter for the google map
         googleMap.setInfoWindowAdapter(new GoogleMap.InfoWindowAdapter() {
             Marker marker;
@@ -280,6 +293,16 @@ public class Map extends FragmentActivity implements OnMapReadyCallback,Activity
             @Override
             public View getInfoContents(Marker arg0) {
                 return null;
+            }
+        });
+
+        googleMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
+            @Override
+            public void onInfoWindowClick(Marker marker) {
+
+                intent = new Intent(getApplicationContext(),mapdetail.class);
+                intent.putExtra("jwt",jwt2);
+                startActivity(intent);//액티비티 띄우기
             }
         });
 
@@ -625,7 +648,7 @@ public class Map extends FragmentActivity implements OnMapReadyCallback,Activity
                         + "소개 :" + String.valueOf(info.result.get(i).Franchise_Desc);
                 MarkerOptions markerOptions = new MarkerOptions();
                 markerOptions.position(LatLng);
-                markerOptions.title(info.result.get(i).Franchise_Name + "," + info.result.get(i).Franchise_Uri);
+                markerOptions.title(info.result.get(i).Franchise_Name + "," + info.result.get(i).Franchise_Uri + "," + info.result.get(i).Franchise_No);
                 markerOptions.snippet(markerSnippet);
                 markerOptions.draggable(true);
                 mMap.addMarker(markerOptions);
@@ -643,7 +666,7 @@ public class Map extends FragmentActivity implements OnMapReadyCallback,Activity
     }
 
     public class Location_info {
-
+        int Franchise_No;
         String Franchise_RoadLoc;
         String Franchise_Loc;
         String Franchise_State;

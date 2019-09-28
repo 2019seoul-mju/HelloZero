@@ -33,7 +33,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
        // findViewById(R.id.btn_popupmenu).setOnClickListener(this);
         tvLogin = (TextView) findViewById(R.id.tvUserlogin);
-        Toast.makeText(getApplicationContext(), jwttemp, Toast.LENGTH_LONG).show();
+
         if(jwttemp==null){
             tvLogin.setText("로그인");
         }else{
@@ -81,6 +81,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getApplicationContext(),Map.class);
+                intent.putExtra("jwt",jwttemp);
                 startActivity(intent);//액티비티 띄우기
             }
         });
@@ -101,6 +102,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getApplicationContext(),SearchMap.class);
+                intent.putExtra("jwt",jwttemp);
                 startActivity(intent);//액티비티 띄우기
             }
         });

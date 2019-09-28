@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/container"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+
+    <!--달력보기, 총 수입, 총 지출 바-->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:orientation="horizontal">
+
+        <!--총 수입, 총 지출 테이블-->
+        <TableLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="10dp">
+
+            <!--두번째 행-->
+            <TableRow>
+
+                <!--첫번째 셀-->
+                <TextView
+                    android:layout_weight="0.5"
+                    android:gravity="end"
+                    android:text="가게명 : " />
+
+                <!--두번째 셀 : 총 지출 값 출력-->
+                <TextView
+                    android:id="@+id/name"
+                    android:layout_weight="2"
+                    android:textColor="#ff0000" />
+            </TableRow>
+        </TableLayout>
+
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:orientation="horizontal">
+
+        <!--내용 입력창-->
+
+        <RatingBar
+            android:id="@+id/ratingBarInficator"
+            style="@style/Widget.AppCompat.RatingBar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="75dp"
+            android:numStars="5"
+            android:rating="3"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent" />
+
+
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:orientation="horizontal">
+
+        <EditText
+            android:id="@+id/edit_review"
+            android:layout_width="228dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:hint="내용" />
+        <!--지출 입력 버튼-->
+        <Button
+            android:id="@+id/reviewbtn"
+            style="@style/Widget.AppCompat.Button.Borderless"
+            android:layout_width="50dp"
+            android:layout_height="wrap_content"
+            android:text="등록" />
+    </LinearLayout>
+    <!--수입/지출, 내용, 금액 목록 바-->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="60"
+        android:orientation="vertical">
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:fillViewport="true">
+            <!--내역을 출력해주기 위한 리스트 뷰-->
+            <ListView
+                android:id="@+id/review_list"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"></ListView>
+        </ScrollView>
+    </LinearLayout>
+    <!--내용, 금액 입력창 및 수입, 지출 버튼 바-->
+
+
+</LinearLayout>
