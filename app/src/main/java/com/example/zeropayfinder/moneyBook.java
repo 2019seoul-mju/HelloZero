@@ -55,6 +55,7 @@ public class moneyBook extends AppCompatActivity {
     moneyBook.ConnectServer mc = new moneyBook.ConnectServer();
     int sum = 0;
     SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd kk:mm:ss", Locale.KOREA);
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -72,8 +73,9 @@ public class moneyBook extends AppCompatActivity {
         final String jwt=intent.getStringExtra("jwt");
         jwt2 = jwt;
         mc.requestGet("http://15.164.118.95/hello/listMyPay", "search");
-        adapter.notifyDataSetChanged();
 
+
+        adapter.notifyDataSetChanged();
 
         costbtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -96,8 +98,7 @@ public class moneyBook extends AppCompatActivity {
                         int price = Integer.parseInt(ep.getText().toString());
                         Date currentTime = new Date();
                         String Today_day = sdf.format(currentTime);
-                        adapter.additem(contents,price,Today_day);
-                        adapter.notifyDataSetChanged();
+                        mc.requestPost("http://15.164.118.95/hello/addMyPay",contents,price,Today_day,0);
 
                         sum += price;
                         cost_sum.setText(df.format(sum));
@@ -109,9 +110,10 @@ public class moneyBook extends AppCompatActivity {
                 dialog.show();
             }
         });
+    }
+    public void onResume(Bundle savedInstanceState){
 
     }
-
     public class ListViewAdapter extends BaseAdapter {
         private ArrayList<Listitem> listitems = new ArrayList<Listitem>();
         public ListViewAdapter(){
@@ -154,7 +156,8 @@ public class moneyBook extends AppCompatActivity {
                         public void onClick(DialogInterface dialog, int which) {
                             sum -= listitems.get(pos).getPrice();
 
-                            mc.requestPost("http://15.164.118.95/hello/deleteMyPay",listitems.get(pos));
+                            mc.requestPost("http://15.164.118.95/hello/deleteMyPay",listitems.get(pos).getContent(),listitems.get(pos).getPrice()
+                                    ,listitems.get(pos).getDate(),listitems.get(pos).getSpendno());
                             listitems.remove(pos);
                             adapter.notifyDataSetChanged();
 
@@ -164,7 +167,8 @@ public class moneyBook extends AppCompatActivity {
                     dialog.show();
                 }
             });
-
+            list.invalidate();
+            adapter.notifyDataSetChanged();
             return convertView;
 
         }
@@ -175,13 +179,13 @@ public class moneyBook extends AppCompatActivity {
         public Object getItem(int position){
             return listitems.get(position);
         }
-        public void additem(String content, int price,String Today_day){
+        public void additem(String content, int price,String Today_day,int spendno){
             Listitem item = new Listitem();
             item.setContent(content);
             item.setPrice(price);
             item.setDate(Today_day);
+            item.setSpendno(spendno);
 
-            mc.requestPost("http://15.164.118.95/hello/addMyPay",item);
             listitems.add(0,item);
         }
         public void addlist(String content, int price,String Today_day,int spendno){
@@ -192,6 +196,7 @@ public class moneyBook extends AppCompatActivity {
             item.setSpendno(spendno);
 
             listitems.add(item);
+
         }
     }
     public class Listitem{
@@ -261,10 +266,13 @@ public class moneyBook extends AppCompatActivity {
                     String result = response.body().string();
                     Gson gson = new Gson();
                     moneyGson info = gson.fromJson(result, moneyGson.class);
-                    for(int i = 0; i< info.result.size(); i++){
-                        if(Integer.parseInt(info.result.get(i).Spend_Status)==1){
-                            adapter.addlist(info.result.get(i).Spend_Title,Integer.parseInt(info.result.get(i).Spend_Won)
-                                    ,info.result.get(i).Spend_Date,Integer.parseInt(info.result.get(i).Spend_No));
+                    if (info.result.size() == 0) {
+                        cost_sum.setText(df.format(sum));
+                    }
+                    for (int i = 0; i < info.result.size(); i++) {
+                        if (Integer.parseInt(info.result.get(i).Spend_Status) == 1) {
+                            adapter.addlist(info.result.get(i).Spend_Title, Integer.parseInt(info.result.get(i).Spend_Won)
+                                    , info.result.get(i).Spend_Date, Integer.parseInt(info.result.get(i).Spend_No));
                             sum += Integer.parseInt(info.result.get(i).Spend_Won);
                             cost_sum.setText(df.format(sum));
                         }
@@ -272,19 +280,20 @@ public class moneyBook extends AppCompatActivity {
 
                 }
             });
+
         }
 
-        public void requestPost(String url, Listitem item) {
+        public void requestPost(String url, final String content, final int price, final String date, int spendno) {
             if(url.equals("http://15.164.118.95/hello/deleteMyPay")){
                 //Request Body에 서버에 보낼 데이터 작성
                 JSONObject postdata = new JSONObject();
 
                 try {
-                    postdata.put("spendno", item.getSpendno());
+                    postdata.put("spendno", spendno);
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
-
+                Log.d("ddd", "spendno : " + spendno);
                 RequestBody body = RequestBody.create(postdata.toString(), MediaType.parse("application/json; charset=utf-8"));
                 //작성한 Body와 데이터를 보낼 url을 Request에 붙임
                 Request request = new Request.Builder()
@@ -309,9 +318,9 @@ public class moneyBook extends AppCompatActivity {
                 JSONObject postdata = new JSONObject();
 
                 try {
-                    postdata.put("title", item.getContent());
-                    postdata.put("money", item.getPrice());
-                    postdata.put("spenddate",item.getDate());
+                    postdata.put("title", content);
+                    postdata.put("money", price);
+                    postdata.put("spenddate",date);
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -341,9 +350,11 @@ public class moneyBook extends AppCompatActivity {
                         moneyGson postinfo = gson.fromJson(result, moneyGson.class);
                         spno = (Integer.parseInt(postinfo.result.get(0).Spend_No));
                         Log.d("tttttt","ddddddddd" + spno);
+                        adapter.additem(content,price,date,spno);
+
                     }
                 });
-                item.setSpendno(spno);
+                adapter.notifyDataSetChanged();
             }
 
         }
