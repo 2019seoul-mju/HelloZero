@@ -14,9 +14,9 @@
         <EditText
             android:id="@+id/LocationText"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_weight="4"
-            android:hint="Search Location Here" />
+            android:hint="검색 내용" />
 
 
         <Button
@@ -27,9 +27,11 @@
             android:onClick="onMapSearch"
             android:text="Search"
             android:textColor="#FFFFFF"
+            android:layout_margin="5dp"
             android:background="#003da7"/>
 
     </LinearLayout>
+
     <FrameLayout
         android:id="@+id/fram_searchmap"
         android:layout_width="match_parent"
@@ -40,12 +42,21 @@
             android:name="com.google.android.gms.maps.SupportMapFragment"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recyclerView"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="175dp"
-            android:layout_gravity="bottom" />
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            >
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerView"
+                android:layout_width="match_parent"
+                android:layout_height="175dp"
+                android:layout_gravity="bottom" />
+        </LinearLayout>
+
+
+
     </FrameLayout>
+
 
 </LinearLayout>
