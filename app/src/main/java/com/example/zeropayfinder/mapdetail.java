@@ -113,9 +113,8 @@ public class mapdetail extends AppCompatActivity {
 
                             String contents = ec.getText().toString();
                             float rating = ep.getRating();
+                            rc.requestPost("http://15.164.118.95/hello/addReview",contents,rating,0);
 
-                            adapter.additem(contents, rating);
-                            adapter.notifyDataSetChanged();
 
                             edit_review.setText("");
                         }
@@ -193,7 +192,8 @@ public class mapdetail extends AppCompatActivity {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
 
-                                rc.requestPost("http://15.164.118.95/hello/deleteMyReview",listitems.get(pos));
+                                rc.requestPost("http://15.164.118.95/hello/deleteMyReview",listitems.get(pos).content,listitems.get(pos).getRating()
+                                ,listitems.get(pos).getReviewno());
                                 listitems.remove(pos);
                                 adapter.notifyDataSetChanged();
 
@@ -217,13 +217,13 @@ public class mapdetail extends AppCompatActivity {
         public Object getItem(int position){
             return listitems.get(position);
         }
-        public void additem(String content, float rating){
+        public void additem(String content, float rating,int rvno){
             Listitem item = new Listitem();
             item.setUserid(connectuser);
             item.setContent(content);
             item.setRating(rating);
+            item.setReviewno(rvno);
 
-            rc.requestPost("http://15.164.118.95/hello/addReview",item);
             listitems.add(0,item);
         }
         public void addlist(String uid, String content, float rating,int reviewno){
@@ -334,18 +334,20 @@ public class mapdetail extends AppCompatActivity {
 
 
                     }
-
+                    list = findViewById(R.id.review_list);
+                    list.setAdapter(adapter);
                 }
+
             });
         }
 
-        public void requestPost(String url, Listitem item) {
+        public void requestPost(String url, final String content, final float rating, int reviewno) {
             if(url.equals("http://15.164.118.95/hello/deleteMyReview")){
                 //Request Body에 서버에 보낼 데이터 작성
                 JSONObject postdata = new JSONObject();
 
                 try {
-                    postdata.put("reviewno", item.getReviewno());
+                    postdata.put("reviewno", reviewno);
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -375,12 +377,12 @@ public class mapdetail extends AppCompatActivity {
 
                 try {
                     postdata.put("franchiseno", Franchise_no);
-                    postdata.put("content", item.getContent());
-                    postdata.put("star",item.getRating());
+                    postdata.put("content", content);
+                    postdata.put("star",rating);
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
-                Log.d("star", "star : " + item.getRating());
+
                 RequestBody body = RequestBody.create(postdata.toString(), MediaType.parse("application/json; charset=utf-8"));
                 //작성한 Body와 데이터를 보낼 url을 Request에 붙임
                 Request request = new Request.Builder()
@@ -401,15 +403,13 @@ public class mapdetail extends AppCompatActivity {
                     public void onResponse(Call call, Response response) throws IOException {
 
                         String result = response.body().string();
-                        Log.d("tttttt","ddddddddd" + result);
                         Gson gson = new Gson();
                         reviewGson postinfo = gson.fromJson(result, reviewGson.class);
                         rvno = (Integer.parseInt(postinfo.result.get(0).Review_No));
-
-                        Log.d("tttttt","ddddddddd" + rvno);
+                        adapter.additem(content,rating,rvno);
                     }
                 });
-                item.setReviewno(rvno);
+                adapter.notifyDataSetChanged();
 
             }
 

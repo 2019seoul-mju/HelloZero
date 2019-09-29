@@ -167,8 +167,7 @@ public class moneyBook extends AppCompatActivity {
                     dialog.show();
                 }
             });
-            list.invalidate();
-            adapter.notifyDataSetChanged();
+
             return convertView;
 
         }
@@ -257,7 +256,7 @@ public class moneyBook extends AppCompatActivity {
 
                 @Override
                 public void onFailure(Call call, IOException e) {
-                    Log.d("error", "Connect Server Error is " + e.toString());
+
                 }
 
                 @Override
@@ -277,7 +276,9 @@ public class moneyBook extends AppCompatActivity {
                             cost_sum.setText(df.format(sum));
                         }
                     }
+                    list = findViewById(R.id.account_list);
 
+                    list.setAdapter(adapter);
                 }
             });
 
@@ -293,7 +294,7 @@ public class moneyBook extends AppCompatActivity {
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
-                Log.d("ddd", "spendno : " + spendno);
+
                 RequestBody body = RequestBody.create(postdata.toString(), MediaType.parse("application/json; charset=utf-8"));
                 //작성한 Body와 데이터를 보낼 url을 Request에 붙임
                 Request request = new Request.Builder()
@@ -306,7 +307,7 @@ public class moneyBook extends AppCompatActivity {
                 client.newCall(request).enqueue(new Callback() {
                     @Override
                     public void onFailure(Call call, IOException e) {
-                        Log.d("error", "Connect Server Error is " + e.toString());
+
                     }
                     @Override
                     public void onResponse(Call call, Response response) throws IOException {
@@ -338,18 +339,18 @@ public class moneyBook extends AppCompatActivity {
 
                     @Override
                     public void onFailure(Call call, IOException e) {
-                        Log.d("error", "Connect Server Error is " + e.toString());
+
                     }
 
                     @Override
                     public void onResponse(Call call, Response response) throws IOException {
 
                         String result = response.body().string();
-                        Log.d("tttttt","ddddddddd" + result);
+
                         Gson gson = new Gson();
                         moneyGson postinfo = gson.fromJson(result, moneyGson.class);
                         spno = (Integer.parseInt(postinfo.result.get(0).Spend_No));
-                        Log.d("tttttt","ddddddddd" + spno);
+
                         adapter.additem(content,price,date,spno);
 
                     }
