@@ -12,6 +12,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -99,6 +100,9 @@ public class moneyBook extends AppCompatActivity {
                         Date currentTime = new Date();
                         String Today_day = sdf.format(currentTime);
                         mc.requestPost("http://15.164.118.95/hello/addMyPay",contents,price,Today_day,0);
+
+                        InputMethodManager mInputMethodManager = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+                        mInputMethodManager.hideSoftInputFromWindow(edit_price.getWindowToken(), 0);
 
                         sum += price;
                         cost_sum.setText(df.format(sum));

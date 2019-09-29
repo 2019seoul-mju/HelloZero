@@ -36,7 +36,7 @@
             <RatingBar
                 android:id="@+id/ratingbar"
                 style="@style/Widget.AppCompat.RatingBar.Small"
-
+                android:theme="@style/RatingBar"
                 android:layout_width="80dp"
                 android:layout_height="wrap_content"
                 android:numStars="5" />
