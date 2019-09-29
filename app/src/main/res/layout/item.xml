@@ -5,7 +5,7 @@
     android:padding="8dp"
     android:gravity="center_vertical"
     android:layout_marginBottom="8dp"
-    android:background="@android:color/white">
+    android:background="">
 
     <ImageView
         android:id="@+id/imageView"
@@ -22,8 +22,9 @@
 
         <TextView
             android:id="@+id/textView1"
-            android:layout_width="wrap_content"
+            android:layout_width="103dp"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
             android:includeFontPadding="false"
             android:text="TITLE"
             android:textColor="@android:color/black"
@@ -31,23 +32,27 @@
             android:textStyle="bold" />
 
         <TextView
-            android:id="@+id/textView2"
-            android:layout_width="wrap_content"
+            android:id="@+id/textView3"
+            android:layout_width="103dp"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="5dp"
+            android:includeFontPadding="false"
+            android:text="content"
+            android:textColor="@android:color/darker_gray"
+            android:textSize="13sp"
+            android:visibility="invisible" />
+
+        <TextView
+            android:id="@+id/textView2"
+            android:layout_width="105dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
             android:includeFontPadding="false"
             android:text="content"
             android:textColor="@android:color/darker_gray"
             android:textSize="13sp" />
 
-        <TextView
-            android:id="@+id/textView3"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:includeFontPadding="false"
-            android:text="content"
-            android:textColor="@android:color/darker_gray"
-            android:textSize="13sp"
-            android:visibility="invisible"/>
     </LinearLayout>
 
 </LinearLayout>
