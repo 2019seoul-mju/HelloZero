@@ -206,7 +206,9 @@ public class Map extends FragmentActivity implements OnMapReadyCallback,Activity
                 if(location != null) {
                     Map.ConnectServer connectServerGet = new Map.ConnectServer();
                     connectServerGet.requestGet("http://15.164.118.95/hello/findZero/"+ location.getLongitude() + "/" + location.getLatitude(), "location");
-
+                    LatLng currentLatLng = new LatLng(location.getLatitude(), location.getLongitude());
+                    CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLng(currentLatLng);
+                    mMap.moveCamera(cameraUpdate);
                 } else{
                     Toast.makeText(getApplicationContext(), "현재위치를 확인중입니다. 잠시만 기다려주세요.", Toast.LENGTH_SHORT).show();
                 }
@@ -241,6 +243,7 @@ public class Map extends FragmentActivity implements OnMapReadyCallback,Activity
                     String[] word = arg0.getTitle().split(",");
                     ImageView Marker_Img = (ImageView) v.findViewById(R.id.Marker_Img);
                     String imageUrl = word[1].replace( "\\", "");
+                    mapdetail.setFranchise_img(imageUrl);
                     Glide.with(Map.this).load(imageUrl).listener(new RequestListener<Drawable>() {
                         @Override
                         public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
@@ -466,7 +469,6 @@ public class Map extends FragmentActivity implements OnMapReadyCallback,Activity
 
 
         LatLng currentLatLng = new LatLng(location.getLatitude(), location.getLongitude());
-
         MarkerOptions markerOptions = new MarkerOptions();
         markerOptions.position(currentLatLng);
         markerOptions.title(markerTitle);
@@ -476,8 +478,8 @@ public class Map extends FragmentActivity implements OnMapReadyCallback,Activity
 
         //currentMarker = mGoogleMap.addMarker(markerOptions);
 
-        CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLng(currentLatLng);
-        mMap.moveCamera(cameraUpdate);
+//        CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLng(currentLatLng);
+//        mMap.moveCamera(cameraUpdate);
     }
 
     public void setDefaultLocation() {
