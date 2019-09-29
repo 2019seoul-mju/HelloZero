@@ -54,6 +54,7 @@
             android:layout_marginLeft="75dp"
             android:numStars="5"
             android:rating="3"
+            android:theme="@style/RatingBar"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent" />
 

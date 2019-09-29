@@ -17,6 +17,7 @@ import okhttp3.Request;
 import okhttp3.Response;
 
 import android.Manifest;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -32,6 +33,7 @@ import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -94,6 +96,7 @@ public class SearchMap extends FragmentActivity implements OnMapReadyCallback,Ac
 
     Location mCurrentLocatiion;
     LatLng currentPosition;
+    InputMethodManager imm;
 
     private FusedLocationProviderClient mFusedLocationClient;
     private LocationRequest locationRequest;
@@ -114,6 +117,7 @@ public class SearchMap extends FragmentActivity implements OnMapReadyCallback,Ac
         intent=new Intent(this.getIntent());
         final String jwt=intent.getStringExtra("jwt");
         jwt2 = jwt;
+        imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
         locationRequest = new LocationRequest()
                 .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
                 .setInterval(UPDATE_INTERVAL_MS)
@@ -247,6 +251,7 @@ public class SearchMap extends FragmentActivity implements OnMapReadyCallback,Ac
             @Override
             public void onClick(View v) {
                 ConnectServer_get(Location_name.getText().toString());
+                imm.hideSoftInputFromWindow(Location_name.getWindowToken(), 0);
                 init();
             }
         });
