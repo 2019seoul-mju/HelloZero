@@ -78,13 +78,6 @@ public class login extends AppCompatActivity {
                 startActivity(intent2);//액티비티 띄우기
             }
         });
-        // Login Screen 으로 Activity 이동
-//        btnLogin.setOnClickListener(new View.OnClickListener() {
-//            public void onClick(View view) {
-//                startActivity(new Intent(getApplicationContext(), Login.class));
-//                finish();
-//            }
-//        });
 
     }
 
@@ -107,12 +100,12 @@ public class login extends AppCompatActivity {
             client.newCall(request).enqueue(new Callback() {
                 @Override
                 public void onFailure(Call call, IOException e) {
-                    Log.d("error", "Connect Server Error is " + e.toString());
+
                 }
 
                 @Override
                 public void onResponse(Call call, Response response) throws IOException {
-                    Log.d("aaaa", "Response Body is " + response.body().string());
+
                 }
             });
         }
@@ -147,7 +140,7 @@ public class login extends AppCompatActivity {
             client.newCall(request).enqueue(new Callback() {
                 @Override
                 public void onFailure(Call call, IOException e) {
-                    Log.d("error", "Connect Server Error is " + e.toString());
+
                 }
 
                 @Override
@@ -162,7 +155,7 @@ public class login extends AppCompatActivity {
                             Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                             intent.putExtra("jwt",info.jwt);
                             MainActivity.setJWT(info.jwt);
-                            //startActivity(intent);
+
                             finish();
                             Looper.loop();
                         } else {

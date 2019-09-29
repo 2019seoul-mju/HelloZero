@@ -95,7 +95,16 @@ public class join extends AppCompatActivity {
                     Join_User_Password.requestFocus();
                     return;
                 }
-
+                if( Join_User_Password.getText().toString().length()  < 3 ) {
+                    Toast.makeText(join.this, "비밀번호를 3자리 이상으로 입력하세요!", Toast.LENGTH_SHORT).show();
+                    Join_User_Password.requestFocus();
+                    return;
+                }
+                if( Join_User_Password.getText().toString().length()  > 15 ) {
+                    Toast.makeText(join.this, "비밀번호를 15자리 이하로 입력하세요!", Toast.LENGTH_SHORT).show();
+                    Join_User_Password.requestFocus();
+                    return;
+                }
                 // 비밀번호 확인 입력 확인
                 if( Join_User_PasswordConfirm.getText().toString().length() == 0 ) {
                     Toast.makeText(join.this, "비밀번호 확인을 입력하세요!", Toast.LENGTH_SHORT).show();
@@ -125,8 +134,7 @@ public class join extends AppCompatActivity {
                     try{
                         ConnectServer connectServerPost = new ConnectServer();
                         connectServerPost.requestPost("http://15.164.118.95/hello/user", email, password);
-                        Log.d("test", email);
-                        Log.d("test", password);
+
                         Thread.sleep(1000);
                     }catch (Exception e){
 
@@ -175,12 +183,12 @@ public class join extends AppCompatActivity {
             client.newCall(request).enqueue(new Callback() {
                 @Override
                 public void onFailure(Call call, IOException e) {
-                    Log.d("error", "Connect Server Error is " + e.toString());
+
                 }
 
                 @Override
                 public void onResponse(Call call, Response response) throws IOException {
-                    Log.d("aaaa", "Response Body is " + response.body().string());
+
                 }
             });
         }
@@ -203,7 +211,7 @@ public class join extends AppCompatActivity {
             client.newCall(request).enqueue(new Callback() {
                 @Override
                 public void onFailure(Call call, IOException e) {
-                    Log.d("error", "Connect Server Error is " + e.toString());
+
                 }
 
                 @Override
@@ -212,9 +220,8 @@ public class join extends AppCompatActivity {
                     Log.d("test", result);
                     Gson gson = new Gson();
                     joinGson info = gson.fromJson(result, joinGson.class);
-                    //Log.d("test", info.isSuccess);
+
                     setIsSuccess(info.isSuccess);
-                    //isSuccess = info.isSuccess;
                     msg = info.message;
                 }
             });
@@ -223,7 +230,6 @@ public class join extends AppCompatActivity {
     }
     private void setIsSuccess(Boolean isSucess) {
         this.isSuccess = isSucess;
-        //Log.d("real log", this.isSuccess);
     }
 
     public class joinGson {

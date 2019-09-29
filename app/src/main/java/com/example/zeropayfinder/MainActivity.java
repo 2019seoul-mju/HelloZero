@@ -119,6 +119,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getApplicationContext(),stamp.class);
+                if(jwttemp == null){
+                    Toast.makeText(MainActivity.this, "로그인이 필요한 서비스입니다.", Toast.LENGTH_SHORT).show();
+                }
                 startActivity(intent);//액티비티 띄우기
             }
         });
