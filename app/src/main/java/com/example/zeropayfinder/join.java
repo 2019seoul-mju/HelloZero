@@ -17,15 +17,12 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
-import android.util.Log;
 
 import com.google.gson.Gson;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 import java.io.IOException;
-import java.util.List;
-import java.util.concurrent.ExecutionException;
 
 
 public class join extends AppCompatActivity {
@@ -217,7 +214,6 @@ public class join extends AppCompatActivity {
                 @Override
                 public void onResponse(Call call, Response response) throws IOException {
                     String result = response.body().string();
-                    Log.d("test", result);
                     Gson gson = new Gson();
                     joinGson info = gson.fromJson(result, joinGson.class);
 

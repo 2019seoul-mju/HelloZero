@@ -1,7 +1,5 @@
 package com.example.zeropayfinder;
 
-import com.google.android.gms.maps.model.LatLng;
-
 public class Data {
 
     private String title;

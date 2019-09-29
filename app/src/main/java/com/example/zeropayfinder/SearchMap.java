@@ -3,7 +3,6 @@ package com.example.zeropayfinder;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentActivity;
@@ -67,7 +66,6 @@ import com.google.maps.android.clustering.ClusterManager;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
@@ -172,7 +170,6 @@ public class SearchMap extends FragmentActivity implements OnMapReadyCallback,Ac
 
                     setCurrentLocation(currentLatLng);
 
-                    Log.d(TAG, "" + rv.getChildViewHolder(child).itemView.findViewById(R.id.textView3));
                 }
                 return false;
             }
@@ -267,7 +264,6 @@ public class SearchMap extends FragmentActivity implements OnMapReadyCallback,Ac
             public boolean onMarkerClick(Marker marker) {
                 // 마커 클릭시 호출되는 콜백 메서드
                 String[] word = marker.getTitle().split(",");
-                Log.d("aaaaaaaa", word[0] + word[2]);
                 mapdetail.setFranchise_no(Integer.parseInt(word[2]));
                 mapdetail.setFranchise_name(word[0]);
                 return false;
@@ -377,7 +373,6 @@ public class SearchMap extends FragmentActivity implements OnMapReadyCallback,Ac
                 String markerSnippet = "위도:" + String.valueOf(location.getLatitude())
                         + " 경도:" + String.valueOf(location.getLongitude());
 
-                Log.d(TAG, "onLocationResult : " + markerSnippet);
 
                 mCurrentLocatiion = location;
             }
@@ -390,7 +385,6 @@ public class SearchMap extends FragmentActivity implements OnMapReadyCallback,Ac
     private void startLocationUpdates() {
 
         if (!checkLocationServicesStatus()) {
-            Log.d(TAG, "startLocationUpdates : call showDialogForLocationServiceSetting");
             showDialogForLocationServiceSetting();
         }else {
 
@@ -404,12 +398,10 @@ public class SearchMap extends FragmentActivity implements OnMapReadyCallback,Ac
             if (hasFineLocationPermission != PackageManager.PERMISSION_GRANTED ||
                     hasCoarseLocationPermission != PackageManager.PERMISSION_GRANTED   ) {
 
-                Log.d(TAG, "startLocationUpdates : 퍼미션 안가지고 있음");
                 return;
             }
 
 
-            Log.d(TAG, "startLocationUpdates : call mFusedLocationClient.requestLocationUpdates");
 
             mFusedLocationClient.requestLocationUpdates(locationRequest, locationCallback, Looper.myLooper());
 
@@ -424,11 +416,9 @@ public class SearchMap extends FragmentActivity implements OnMapReadyCallback,Ac
     protected void onStart() {
         super.onStart();
 
-        Log.d(TAG, "onStart");
 
         if (checkPermission()) {
 
-            Log.d(TAG, "onStart : call mFusedLocationClient.requestLocationUpdates");
             mFusedLocationClient.requestLocationUpdates(locationRequest, locationCallback, null);
 
             if (mMap!=null)
@@ -447,7 +437,6 @@ public class SearchMap extends FragmentActivity implements OnMapReadyCallback,Ac
 
         if (mFusedLocationClient != null) {
 
-            Log.d(TAG, "onStop : call stopLocationUpdates");
             mFusedLocationClient.removeLocationUpdates(locationCallback);
         }
     }
@@ -638,8 +627,6 @@ public class SearchMap extends FragmentActivity implements OnMapReadyCallback,Ac
                 if (checkLocationServicesStatus()) {
                     if (checkLocationServicesStatus()) {
 
-                        Log.d(TAG, "onActivityResult : GPS 활성화 되있음");
-
 
                         needRequest = true;
 
@@ -742,7 +729,7 @@ public class SearchMap extends FragmentActivity implements OnMapReadyCallback,Ac
 
                 @Override
                 public void onFailure(Call call, IOException e) {
-                    Log.d("error", "Connect Server Error is " + e.toString());
+
                 }
 
                 @Override

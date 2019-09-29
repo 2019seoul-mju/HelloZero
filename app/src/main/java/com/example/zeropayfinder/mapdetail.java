@@ -4,11 +4,8 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.service.voice.AlwaysOnHotwordDetector;
 import android.util.Base64;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -45,7 +42,6 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
-import okio.Utf8;
 
 public class mapdetail extends AppCompatActivity {
     private TextView name,reviewdate;
@@ -146,7 +142,6 @@ public class mapdetail extends AppCompatActivity {
     }
     public static String decodeJWT(String EncodeString) throws Exception{
         String[] spliter = EncodeString.split("\\.");
-        Log.d("pay", "Payload" + getJSon(spliter[1]));
         Gson gson = new Gson();
         payload info = gson.fromJson(getJSon(spliter[1]), payload.class);
         return info.email;
@@ -315,7 +310,6 @@ public class mapdetail extends AppCompatActivity {
 
             String requestUrl = urlBuilder.build().toString();
             JSONObject postdata = new JSONObject();
-            Log.d("dddd", "DDDD"+Franchise_no);
             try {
                 postdata.put("franchiseno", Franchise_no);
             } catch (JSONException e) {
@@ -347,7 +341,6 @@ public class mapdetail extends AppCompatActivity {
 
                 @Override
                 public void onFailure(Call call, IOException e) {
-                    Log.d("error", "Connect Server Error is " + e.toString());
                 }
 
                 @Override
@@ -392,7 +385,7 @@ public class mapdetail extends AppCompatActivity {
                 client.newCall(request).enqueue(new Callback() {
                     @Override
                     public void onFailure(Call call, IOException e) {
-                        Log.d("error", "Connect Server Error is " + e.toString());
+
                     }
                     @Override
                     public void onResponse(Call call, Response response) throws IOException {
@@ -424,7 +417,7 @@ public class mapdetail extends AppCompatActivity {
 
                     @Override
                     public void onFailure(Call call, IOException e) {
-                        Log.d("error", "Connect Server Error is " + e.toString());
+
                     }
 
                     @Override

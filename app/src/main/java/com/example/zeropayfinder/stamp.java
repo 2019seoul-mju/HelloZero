@@ -3,10 +3,8 @@ package com.example.zeropayfinder;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.Toast;
 
 public class stamp extends AppCompatActivity {
 
@@ -33,7 +31,7 @@ public class stamp extends AppCompatActivity {
         button1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.d("test","dfd");
+
                 if(buttonState % 2 == 0){
                     button1.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
 
@@ -49,7 +47,7 @@ public class stamp extends AppCompatActivity {
         button2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.d("test","dfd");
+
                 if(buttonState % 2 == 0){
                     button2.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
 
@@ -65,7 +63,7 @@ public class stamp extends AppCompatActivity {
         button3.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.d("test","dfd");
+
                 if(buttonState % 2 == 0){
                     button3.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
 
@@ -81,7 +79,7 @@ public class stamp extends AppCompatActivity {
         button4.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.d("test","dfd");
+
                 if(buttonState % 2 == 0){
                     button4.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
 
@@ -97,7 +95,7 @@ public class stamp extends AppCompatActivity {
         button5.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.d("test","dfd");
+
                 if(buttonState % 2 == 0){
                     button5.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
 
@@ -113,7 +111,7 @@ public class stamp extends AppCompatActivity {
         button6.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.d("test","dfd");
+
                 if(buttonState % 2 == 0){
                     button6.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
 
@@ -129,7 +127,7 @@ public class stamp extends AppCompatActivity {
         button7.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.d("test","dfd");
+
                 if(buttonState % 2 == 0){
                     button7.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
 
@@ -145,7 +143,7 @@ public class stamp extends AppCompatActivity {
         button8.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.d("test","dfd");
+
                 if(buttonState % 2 == 0){
                     button8.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
 
@@ -161,7 +159,7 @@ public class stamp extends AppCompatActivity {
         button9.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.d("test","dfd");
+
                 if(buttonState % 2 == 0){
                     button9.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
 
@@ -177,7 +175,7 @@ public class stamp extends AppCompatActivity {
         button10.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.d("test","dfd");
+
                 if(buttonState % 2 == 0){
                     button10.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
 

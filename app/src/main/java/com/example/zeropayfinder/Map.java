@@ -9,10 +9,8 @@ import androidx.core.content.ContextCompat;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.HttpUrl;
-import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
-import okhttp3.RequestBody;
 import okhttp3.Response;
 
 import android.Manifest;
@@ -24,9 +22,7 @@ import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationManager;
-import android.net.Uri;
 import android.os.Bundle;
-import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
 import android.view.View;
@@ -58,9 +54,6 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.gson.Gson;
-
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.List;
@@ -318,7 +311,7 @@ public class Map extends FragmentActivity implements OnMapReadyCallback,Activity
             @Override
             public void onMapClick(LatLng latLng) {
 
-                Log.d( TAG, "onMapClick :");
+
             }
         });
     }
@@ -343,7 +336,6 @@ public class Map extends FragmentActivity implements OnMapReadyCallback,Activity
                 String markerSnippet = "위도:" + String.valueOf(location.getLatitude())
                         + " 경도:" + String.valueOf(location.getLongitude());
 
-                Log.d(TAG, "onLocationResult : " + markerSnippet);
 
 
 
@@ -361,7 +353,6 @@ public class Map extends FragmentActivity implements OnMapReadyCallback,Activity
 
         if (!checkLocationServicesStatus()) {
 
-            Log.d(TAG, "startLocationUpdates : call showDialogForLocationServiceSetting");
             showDialogForLocationServiceSetting();
         }else {
 
@@ -375,12 +366,9 @@ public class Map extends FragmentActivity implements OnMapReadyCallback,Activity
             if (hasFineLocationPermission != PackageManager.PERMISSION_GRANTED ||
                     hasCoarseLocationPermission != PackageManager.PERMISSION_GRANTED   ) {
 
-                Log.d(TAG, "startLocationUpdates : 퍼미션 안가지고 있음");
                 return;
             }
 
-
-            Log.d(TAG, "startLocationUpdates : call mFusedLocationClient.requestLocationUpdates");
 
             mFusedLocationClient.requestLocationUpdates(locationRequest, locationCallback, Looper.myLooper());
 
@@ -396,11 +384,8 @@ public class Map extends FragmentActivity implements OnMapReadyCallback,Activity
     protected void onStart() {
         super.onStart();
 
-        Log.d(TAG, "onStart");
-
         if (checkPermission()) {
 
-            Log.d(TAG, "onStart : call mFusedLocationClient.requestLocationUpdates");
             mFusedLocationClient.requestLocationUpdates(locationRequest, locationCallback, null);
 
             if (mMap!=null)
@@ -419,7 +404,6 @@ public class Map extends FragmentActivity implements OnMapReadyCallback,Activity
 
         if (mFusedLocationClient != null) {
 
-            Log.d(TAG, "onStop : call stopLocationUpdates");
             mFusedLocationClient.removeLocationUpdates(locationCallback);
         }
     }
@@ -621,9 +605,6 @@ public class Map extends FragmentActivity implements OnMapReadyCallback,Activity
                 if (checkLocationServicesStatus()) {
                     if (checkLocationServicesStatus()) {
 
-                        Log.d(TAG, "onActivityResult : GPS 활성화 되있음");
-
-
                         needRequest = true;
 
                         return;
@@ -696,7 +677,6 @@ public class Map extends FragmentActivity implements OnMapReadyCallback,Activity
 
                 @Override
                 public void onFailure(Call call, IOException e) {
-                    Log.d("error", "Connect Server Error is " + e.toString());
                 }
 
                 @Override
