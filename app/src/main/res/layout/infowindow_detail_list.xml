@@ -17,18 +17,31 @@
 
             <TextView
                 android:id="@+id/userid"
-                android:layout_width="206dp"
+                android:layout_width="104dp"
                 android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:text="TextView"
+                android:textColor="#000000"
+                android:textSize="8pt"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/reviewdate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="TextView" />
 
             <RatingBar
                 android:id="@+id/ratingbar"
-                style="@style/Widget.AppCompat.RatingBar.Indicator"
-                android:layout_width="161dp"
-                android:layout_height="match_parent"
+                style="@style/Widget.AppCompat.RatingBar.Small"
+
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:numStars="5" />
+
+
         </LinearLayout>
 
         <TextView

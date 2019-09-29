@@ -56,20 +56,12 @@
             >
         </ImageView>
 
-        <Button
-            android:id="@+id/Login"
-            android:layout_width="80dp"
-            android:layout_height="80dp"
-            android:background="@drawable/login_widget"
-            android:layout_marginLeft="18dp"
-            android:layout_marginTop="250dp"
-            ></Button>
            <Button
             android:id="@+id/Accountbtn"
             android:layout_width="80dp"
             android:layout_height="80dp"
             android:background="@drawable/account_widget"
-            android:layout_marginLeft="110dp"
+            android:layout_marginLeft="30dp"
             android:layout_marginTop="250dp"
             ></Button>
     </FrameLayout>

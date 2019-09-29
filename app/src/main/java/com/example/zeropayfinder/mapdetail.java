@@ -29,9 +29,11 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -44,7 +46,7 @@ import okhttp3.Response;
 import okio.Utf8;
 
 public class mapdetail extends AppCompatActivity {
-    private TextView name;
+    private TextView name,reviewdate;
     private Button reviewbtn;
     private EditText edit_review;
     private RatingBar ratingbar;
@@ -57,13 +59,14 @@ public class mapdetail extends AppCompatActivity {
     mapdetail.ConnectServer rc = new mapdetail.ConnectServer();
     private static String[] split;
     private String connectuser;
-
+    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd kk:mm:ss", Locale.KOREA);
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.custom_infowindow_detail);
 
         ratingbar = findViewById(R.id.ratingBarInficator);
         name = findViewById(R.id.name);
+        reviewdate = findViewById(R.id.reviewdate);
         reviewbtn = findViewById(R.id.reviewbtn);
         edit_review = findViewById(R.id.edit_review);
         list = findViewById(R.id.review_list);
@@ -78,10 +81,7 @@ public class mapdetail extends AppCompatActivity {
 
         final String jwt=intent.getStringExtra("jwt");
         jwt2 = jwt;
-        if(jwt2 == null){
-            Log.d("err", "jwt null");
-        }
-        Log.d("jwt","jwt : " + jwt2);
+
         try{
             connectuser = decodeJWT(jwt2);
         } catch (Exception e){
@@ -168,11 +168,13 @@ public class mapdetail extends AppCompatActivity {
             }
 
             TextView Userid = (TextView) convertView.findViewById((R.id.userid));
+            TextView Date = (TextView) convertView.findViewById((R.id.reviewdate));
             RatingBar Ratingbar = (RatingBar) convertView.findViewById((R.id.ratingbar));
             TextView Review_contents = (TextView) convertView.findViewById((R.id.review_contents));
             final Listitem listViewItem = listitems.get(position);
 
-            Userid.setText(listViewItem.getUserid());
+            Userid.setText(listViewItem.getUserid().substring(0,4)+ "****");
+            Date.setText(listViewItem.getDate().substring(0,10));
             Ratingbar.setRating(listViewItem.getRating());
             Review_contents.setText(listViewItem.getContent());
 
@@ -217,21 +219,23 @@ public class mapdetail extends AppCompatActivity {
         public Object getItem(int position){
             return listitems.get(position);
         }
-        public void additem(String content, float rating,int rvno){
+        public void additem(String content, float rating,int rvno,String today){
             Listitem item = new Listitem();
             item.setUserid(connectuser);
             item.setContent(content);
             item.setRating(rating);
             item.setReviewno(rvno);
+            item.setDate(today);
 
             listitems.add(0,item);
         }
-        public void addlist(String uid, String content, float rating,int reviewno){
+        public void addlist(String uid, String content, float rating,int reviewno, String date){
             Listitem item = new Listitem();
             item.setUserid(uid);
             item.setContent(content);
             item.setRating(rating);
             item.setReviewno(reviewno);
+            item.setDate(date);
 
             listitems.add(item);
         }
@@ -241,6 +245,13 @@ public class mapdetail extends AppCompatActivity {
         private float rating;
         private String userid;
         private int reviewno;
+        private String date;
+        public void setDate(String date){
+            this.date = date;
+        }
+        public String getDate(){
+            return date;
+        }
         public void setReviewno(int reviewno){
             this.reviewno = reviewno;
         }
@@ -330,7 +341,7 @@ public class mapdetail extends AppCompatActivity {
                     reviewGson info = gson.fromJson(result, reviewGson.class);
                     for(int i = 0; i< info.result.size(); i++){
                         adapter.addlist(info.result.get(i).User_Email,info.result.get(i).Review_Content
-                                ,Float.parseFloat(info.result.get(i).Review_Star),Integer.parseInt(info.result.get(i).Review_No));
+                                ,Float.parseFloat(info.result.get(i).Review_Star),Integer.parseInt(info.result.get(i).Review_No),info.result.get(i).Review_Date);
 
 
                     }
@@ -406,7 +417,9 @@ public class mapdetail extends AppCompatActivity {
                         Gson gson = new Gson();
                         reviewGson postinfo = gson.fromJson(result, reviewGson.class);
                         rvno = (Integer.parseInt(postinfo.result.get(0).Review_No));
-                        adapter.additem(content,rating,rvno);
+                        Date today = new Date();
+                        String todays = sdf.format(today);
+                        adapter.additem(content,rating,rvno,todays);
                     }
                 });
                 adapter.notifyDataSetChanged();
