@@ -15,6 +15,7 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RatingBar;
 import android.widget.TextView;
@@ -22,6 +23,7 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.bumptech.glide.Glide;
 import com.google.gson.Gson;
 
 import org.json.JSONException;
@@ -47,6 +49,7 @@ import okio.Utf8;
 
 public class mapdetail extends AppCompatActivity {
     private TextView name,reviewdate;
+    ImageView img;
     private Button reviewbtn;
     private EditText edit_review;
     private RatingBar ratingbar;
@@ -56,6 +59,7 @@ public class mapdetail extends AppCompatActivity {
     Intent intent;
     private static int Franchise_no;
     private static String Franchise_name;
+    private static String Franchise_img;
     mapdetail.ConnectServer rc = new mapdetail.ConnectServer();
     private static String[] split;
     private String connectuser;
@@ -65,6 +69,7 @@ public class mapdetail extends AppCompatActivity {
         setContentView(R.layout.custom_infowindow_detail);
 
         ratingbar = findViewById(R.id.ratingBarInficator);
+        img = findViewById(R.id.image2);
         name = findViewById(R.id.name);
         reviewdate = findViewById(R.id.reviewdate);
         reviewbtn = findViewById(R.id.reviewbtn);
@@ -75,6 +80,9 @@ public class mapdetail extends AppCompatActivity {
         ratingbar.setOnRatingBarChangeListener(new Listener());
 
         name.setText(Franchise_name);
+        Glide.with(mapdetail.this)
+                .load(Franchise_img)
+                .into(img);
 
         adapter = new ListViewAdapter();
         list.setAdapter(adapter);
@@ -124,6 +132,12 @@ public class mapdetail extends AppCompatActivity {
             }
         });
     }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+    }
+
     public class payload{
         String date;
         String email;
@@ -282,6 +296,9 @@ public class mapdetail extends AppCompatActivity {
     }
     public static void setFranchise_name(String  fn){
         Franchise_name = fn;
+    }
+    public static void setFranchise_img(String  fn){
+        Franchise_img = fn;
     }
 
     class ConnectServer {

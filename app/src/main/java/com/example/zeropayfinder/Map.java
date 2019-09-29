@@ -211,9 +211,7 @@ public class Map extends FragmentActivity implements OnMapReadyCallback,Activity
             public void onClick(View v) {
                 if(location != null) {
                     Map.ConnectServer connectServerGet = new Map.ConnectServer();
-                    //connectServerGet.requestGet("http://15.164.118.95/hello/findZero/"+ location.getLongitude() + "/" + location.getLatitude(), "location");
-                    //앱 제출전에 위에거로 변경
-                    connectServerGet.requestGet("http://15.164.118.95/hello/findZero/127.0323094/37.52557938", "location");
+                    connectServerGet.requestGet("http://15.164.118.95/hello/findZero/"+ location.getLongitude() + "/" + location.getLatitude(), "location");
                 } else{
                     Toast.makeText(getApplicationContext(), "현재위치를 확인중입니다. 잠시만 기다려주세요.", Toast.LENGTH_SHORT).show();
                 }

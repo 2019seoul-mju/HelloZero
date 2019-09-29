@@ -5,19 +5,19 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
-
-
-    <!--달력보기, 총 수입, 총 지출 바-->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:orientation="horizontal">
 
+
         <!--총 수입, 총 지출 테이블-->
         <TableLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginLeft="30dp"
             android:padding="10dp">
 
             <!--두번째 행-->
@@ -25,19 +25,30 @@
 
                 <!--첫번째 셀-->
                 <TextView
-                    android:layout_weight="0.5"
                     android:gravity="end"
-                    android:text="가게명 : " />
+                    android:text="가게명 : "
+                    android:textSize="25dp" />
 
                 <!--두번째 셀 : 총 지출 값 출력-->
                 <TextView
                     android:id="@+id/name"
+                    android:layout_height="wrap_content"
                     android:layout_weight="2"
-                    android:textColor="#ff0000" />
+                    android:text="예시"
+                    android:textColor="#000000"
+                    android:textSize="25dp" />
             </TableRow>
         </TableLayout>
 
     </LinearLayout>
+
+    <ImageView
+        android:id="@+id/image2"
+        android:layout_width="match_parent"
+        android:layout_height="266dp"
+        android:src="@mipmap/ic_launcher" />
+
+    <!--달력보기, 총 수입, 총 지출 바-->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -52,6 +63,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="75dp"
+            android:layout_marginTop="15dp"
             android:numStars="5"
             android:rating="3"
             android:theme="@style/RatingBar"
@@ -70,22 +82,28 @@
             android:id="@+id/edit_review"
             android:layout_width="228dp"
             android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:layout_marginLeft="30dp"
             android:layout_weight="1"
             android:gravity="center"
             android:hint="내용" />
         <!--지출 입력 버튼-->
         <Button
             android:id="@+id/reviewbtn"
-            style="@style/Widget.AppCompat.Button.Borderless"
-            android:layout_width="50dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="등록" />
+            android:onClick="onMapSearch"
+            android:text="등록"
+            android:textColor="#FFFFFF"
+            android:layout_margin="5dp"
+            android:background="#003da7" />
     </LinearLayout>
     <!--수입/지출, 내용, 금액 목록 바-->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_weight="60"
+        android:layout_margin="15dp"
         android:orientation="vertical">
 
         <ScrollView

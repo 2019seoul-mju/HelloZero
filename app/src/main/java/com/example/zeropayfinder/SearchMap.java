@@ -105,6 +105,8 @@ public class SearchMap extends FragmentActivity implements OnMapReadyCallback,Ac
     private View mLayout;
     public String jwt2;
     Intent intent;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -250,9 +252,13 @@ public class SearchMap extends FragmentActivity implements OnMapReadyCallback,Ac
         btnSearchLocation.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ConnectServer_get(Location_name.getText().toString());
-                imm.hideSoftInputFromWindow(Location_name.getWindowToken(), 0);
-                init();
+                if(isBlankOrSpacing(Location_name.toString()) == true) {
+                    ConnectServer_get(Location_name.getText().toString());
+                    imm.hideSoftInputFromWindow(Location_name.getWindowToken(), 0);
+                    init();
+                } else {
+                    Toast.makeText(getApplicationContext(), "검색어를 입력해주세요.", Toast.LENGTH_SHORT).show();
+                }
             }
         });
 
@@ -261,6 +267,7 @@ public class SearchMap extends FragmentActivity implements OnMapReadyCallback,Ac
             public boolean onMarkerClick(Marker marker) {
                 // 마커 클릭시 호출되는 콜백 메서드
                 String[] word = marker.getTitle().split(",");
+                Log.d("aaaaaaaa", word[0] + word[2]);
                 mapdetail.setFranchise_no(Integer.parseInt(word[2]));
                 mapdetail.setFranchise_name(word[0]);
                 return false;
@@ -298,6 +305,7 @@ public class SearchMap extends FragmentActivity implements OnMapReadyCallback,Ac
                     String[] word = arg0.getTitle().split(",");
                     ImageView Marker_Img = (ImageView) v.findViewById(R.id.Marker_Img);
                     String imageUrl = word[1].replace( "\\", "");
+                    mapdetail.setFranchise_img(imageUrl);
                     Glide.with(SearchMap.this).load(imageUrl).listener(new RequestListener<Drawable>() {
                         @Override
                         public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
@@ -501,7 +509,6 @@ public class SearchMap extends FragmentActivity implements OnMapReadyCallback,Ac
         markerOptions.snippet(markerSnippet);
         markerOptions.draggable(true);
         markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED));
-        //currentMarker = mMap.addMarker(markerOptions);
 
         CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(DEFAULT_LOCATION, 15);
         mMap.moveCamera(cameraUpdate);
@@ -696,6 +703,12 @@ public class SearchMap extends FragmentActivity implements OnMapReadyCallback,Ac
         List<Location_info> result;
     }
 
+    public boolean isBlankOrSpacing(String text){
+        if(text.equals("")||text.matches("\\s+"))
+            return true;
+        return false;
+    }
+
     public class Location_info {
         int Franchise_No;
         String Franchise_RoadLoc;
@@ -753,4 +766,5 @@ public class SearchMap extends FragmentActivity implements OnMapReadyCallback,Ac
             });
         }
     }
+
 }
