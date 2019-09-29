@@ -16,6 +16,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
 
@@ -78,37 +79,41 @@ public class moneyBook extends AppCompatActivity {
         costbtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                AlertDialog.Builder dialog = new AlertDialog.Builder(moneyBook.this);
-                dialog.setMessage("등록하시겠습니까?");
-                dialog.setNegativeButton("아니오", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                    }
-                });
-                dialog.setPositiveButton("네", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        EditText ec = findViewById(R.id.edit_content);
-                        EditText ep = findViewById(R.id.edit_price);
+                if (edit_content.getText().toString().length() == 0 || edit_price.getText().toString().length() == 0) {
+                    Toast.makeText(moneyBook.this, "값을 넣어주세요", Toast.LENGTH_LONG).show();
+                } else {
+                    AlertDialog.Builder dialog = new AlertDialog.Builder(moneyBook.this);
+                    dialog.setMessage("등록하시겠습니까?");
+                    dialog.setNegativeButton("아니오", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                        }
+                    });
+                    dialog.setPositiveButton("네", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            EditText ec = findViewById(R.id.edit_content);
+                            EditText ep = findViewById(R.id.edit_price);
 
-                        String contents = ec.getText().toString();
-                        int price = Integer.parseInt(ep.getText().toString());
-                        Date currentTime = new Date();
-                        String Today_day = sdf.format(currentTime);
-                        mc.requestPost("http://15.164.118.95/hello/addMyPay",contents,price,Today_day,0);
+                            String contents = ec.getText().toString();
+                            int price = Integer.parseInt(ep.getText().toString());
+                            Date currentTime = new Date();
+                            String Today_day = sdf.format(currentTime);
+                            mc.requestPost("http://15.164.118.95/hello/addMyPay", contents, price, Today_day, 0);
 
-                        InputMethodManager mInputMethodManager = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
-                        mInputMethodManager.hideSoftInputFromWindow(edit_price.getWindowToken(), 0);
+                            InputMethodManager mInputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                            mInputMethodManager.hideSoftInputFromWindow(edit_price.getWindowToken(), 0);
 
-                        sum += price;
-                        cost_sum.setText(df.format(sum));
+                            sum += price;
+                            cost_sum.setText(df.format(sum));
 
-                        edit_content.setText("");
-                        edit_price.setText("");
-                    }
-                });
-                dialog.show();
+                            edit_content.setText("");
+                            edit_price.setText("");
+                        }
+                    });
+                    dialog.show();
+                }
             }
         });
     }

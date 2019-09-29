@@ -202,9 +202,11 @@ public class Map extends FragmentActivity implements OnMapReadyCallback,Activity
         btnMyLocation.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 if(location != null) {
                     Map.ConnectServer connectServerGet = new Map.ConnectServer();
                     connectServerGet.requestGet("http://15.164.118.95/hello/findZero/"+ location.getLongitude() + "/" + location.getLatitude(), "location");
+
                 } else{
                     Toast.makeText(getApplicationContext(), "현재위치를 확인중입니다. 잠시만 기다려주세요.", Toast.LENGTH_SHORT).show();
                 }
@@ -338,6 +340,7 @@ public class Map extends FragmentActivity implements OnMapReadyCallback,Activity
 
 
 
+                setCurrentLocation(location, markerTitle, markerSnippet);
 
                 mCurrentLocatiion = location;
             }
@@ -383,6 +386,8 @@ public class Map extends FragmentActivity implements OnMapReadyCallback,Activity
     @Override
     protected void onStart() {
         super.onStart();
+
+        Log.d(TAG, "onStart");
 
         if (checkPermission()) {
 
@@ -452,6 +457,27 @@ public class Map extends FragmentActivity implements OnMapReadyCallback,Activity
 
         return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)
                 || locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
+    }
+
+    public void setCurrentLocation(Location location, String markerTitle, String markerSnippet) {
+
+
+        if (currentMarker != null) currentMarker.remove();
+
+
+        LatLng currentLatLng = new LatLng(location.getLatitude(), location.getLongitude());
+
+        MarkerOptions markerOptions = new MarkerOptions();
+        markerOptions.position(currentLatLng);
+        markerOptions.title(markerTitle);
+        markerOptions.snippet(markerSnippet);
+        markerOptions.draggable(true);
+
+
+        //currentMarker = mGoogleMap.addMarker(markerOptions);
+
+        CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLng(currentLatLng);
+        mMap.moveCamera(cameraUpdate);
     }
 
     public void setDefaultLocation() {
@@ -605,6 +631,8 @@ public class Map extends FragmentActivity implements OnMapReadyCallback,Activity
                 if (checkLocationServicesStatus()) {
                     if (checkLocationServicesStatus()) {
 
+
+
                         needRequest = true;
 
                         return;
@@ -632,9 +660,9 @@ public class Map extends FragmentActivity implements OnMapReadyCallback,Activity
                 markerOptions.draggable(true);
                 mMap.addMarker(markerOptions);
             }
-            LatLng currentLatLng = new LatLng(location.getLatitude(), location.getLongitude());
-            CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLng(currentLatLng);
-            mMap.moveCamera(cameraUpdate);
+//            LatLng currentLatLng = new LatLng(location.getLatitude(), location.getLongitude());
+//            CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLng(currentLatLng);
+//            mMap.moveCamera(cameraUpdate);
         } else {
             Toast.makeText(getApplicationContext(), "주변에 제로페이 가맹점이 없습니다.", Toast.LENGTH_SHORT).show();
         }
@@ -677,6 +705,7 @@ public class Map extends FragmentActivity implements OnMapReadyCallback,Activity
 
                 @Override
                 public void onFailure(Call call, IOException e) {
+
                 }
 
                 @Override

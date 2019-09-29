@@ -249,12 +249,12 @@ public class SearchMap extends FragmentActivity implements OnMapReadyCallback,Ac
         btnSearchLocation.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(isBlankOrSpacing(Location_name.toString()) == true) {
+                if(Location_name.getText().toString().replace(" ", "").equals("")) {
+                    Toast.makeText(getApplicationContext(), "검색어를 입력해주세요.", Toast.LENGTH_SHORT).show();
+                } else {
                     ConnectServer_get(Location_name.getText().toString());
                     imm.hideSoftInputFromWindow(Location_name.getWindowToken(), 0);
                     init();
-                } else {
-                    Toast.makeText(getApplicationContext(), "검색어를 입력해주세요.", Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -688,12 +688,6 @@ public class SearchMap extends FragmentActivity implements OnMapReadyCallback,Ac
 
     public class LocationGson {
         List<Location_info> result;
-    }
-
-    public boolean isBlankOrSpacing(String text){
-        if(text.equals("")||text.matches("\\s+"))
-            return true;
-        return false;
     }
 
     public class Location_info {
