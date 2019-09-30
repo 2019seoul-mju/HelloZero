@@ -15,7 +15,7 @@ import androidx.appcompat.app.AppCompatActivity;
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
     TextView tvLogin;
     Button mbtMap,mbtBook,mbtSearchMap,mbtTutorial,mbtLogin,mbtAccount;
-    static String jwttemp;
+    public static String jwttemp;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -81,12 +81,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         mbtBook.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getApplicationContext(),moneyBook.class);
-                intent.putExtra("jwt",jwttemp);
                 if(jwttemp == null){
                     Toast.makeText(MainActivity.this, "로그인이 필요한 서비스입니다.", Toast.LENGTH_SHORT).show();
                 }
-                else startActivity(intent);//액티비티 띄우기
+                else{
+                    Intent intent = new Intent(getApplicationContext(),moneyBook.class);
+                    intent.putExtra("jwt",jwttemp);
+                    startActivity(intent);//액티비티 띄우기
+                }
             }
         });
 

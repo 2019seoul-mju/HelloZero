@@ -6,7 +6,9 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -58,23 +60,33 @@ public class moneyBook extends AppCompatActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+
         setContentView(R.layout.activity_money_book);
         costbtn = findViewById(R.id.costbtn);
         edit_content = findViewById(R.id.edit_content);
         edit_price = findViewById(R.id.edit_price);
         cost_sum = findViewById(R.id.cost_sum);
         list = findViewById(R.id.account_list);
+
         adapter = new ListViewAdapter();
-        list.setAdapter(adapter);
+        //list.setAdapter(adapter);
 
         intent=new Intent(this.getIntent());
 
         final String jwt=intent.getStringExtra("jwt");
         jwt2 = jwt;
         mc.requestGet("http://15.164.118.95/hello/listMyPay", "search");
-
-
+        try {
+            Thread.sleep(300);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        list.setAdapter(adapter);
         adapter.notifyDataSetChanged();
+
+
+
 
         costbtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -235,7 +247,8 @@ public class moneyBook extends AppCompatActivity {
         }
     }
 
-    class ConnectServer {
+     class ConnectServer
+{
         int spno;
 
         //Client 생성
@@ -282,10 +295,9 @@ public class moneyBook extends AppCompatActivity {
                             cost_sum.setText(df.format(sum));
                         }
                     }
-                    list = findViewById(R.id.account_list);
 
-                    list.setAdapter(adapter);
                 }
+
             });
 
         }
