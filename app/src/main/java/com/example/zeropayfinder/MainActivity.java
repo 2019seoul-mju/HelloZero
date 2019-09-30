@@ -75,11 +75,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         mbtBook.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getApplicationContext(),moneyBook.class);
                 if(SaveSharedPreference.getUserName(MainActivity.this).length() == 0){
                     Toast.makeText(MainActivity.this, "로그인이 필요한 서비스입니다.", Toast.LENGTH_SHORT).show();
                 }
-                else startActivity(intent);//액티비티 띄우기
+                else{
+                    Intent intent = new Intent(getApplicationContext(),moneyBook.class);
+                    startActivity(intent);//액티비티 띄우기
+                }
             }
         });
 
