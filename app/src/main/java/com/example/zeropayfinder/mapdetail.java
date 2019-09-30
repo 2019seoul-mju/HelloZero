@@ -97,7 +97,7 @@ public class mapdetail extends AppCompatActivity {
         reviewbtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (jwt2 == null) {
+                if (SaveSharedPreference.getUserName(mapdetail.this).length() == 0) {
                     Toast.makeText(mapdetail.this, "로그인이 필요한 서비스입니다.", Toast.LENGTH_SHORT).show();
                 } else {
                     AlertDialog.Builder dialog = new AlertDialog.Builder(mapdetail.this);
@@ -318,7 +318,7 @@ public class mapdetail extends AppCompatActivity {
             RequestBody body = RequestBody.create(postdata.toString(), MediaType.parse("application/json; charset=utf-8"));
             //Query문이 들어간 URL을 토대로 Request 생성
             Request request;
-            if(jwt2 == null){
+            if(SaveSharedPreference.getUserName(mapdetail.this).length() == 0){
                 request = new Request.Builder()
                         .url(requestUrl)
                         .post(body)
