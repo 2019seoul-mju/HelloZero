@@ -152,8 +152,7 @@ public class login extends AppCompatActivity {
                             Looper.prepare();
                             Toast.makeText(getApplicationContext(), "로그인 성공!", Toast.LENGTH_LONG).show();
                             Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-                            intent.putExtra("jwt",info.jwt);
-                            MainActivity.setJWT(info.jwt);
+                            SaveSharedPreference.setUserName(login.this, info.jwt);
 
                             finish();
                             Looper.loop();

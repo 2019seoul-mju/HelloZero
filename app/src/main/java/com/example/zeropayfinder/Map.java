@@ -106,7 +106,7 @@ public class Map extends FragmentActivity implements OnMapReadyCallback,Activity
         mLayout = findViewById(R.id.map);
         intent=new Intent(this.getIntent());
         final String jwt=intent.getStringExtra("jwt");
-        jwt2 = jwt;
+        jwt2 = SaveSharedPreference.getUserName(Map.this);
         locationRequest = new LocationRequest()
                 .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
                 .setInterval(UPDATE_INTERVAL_MS)

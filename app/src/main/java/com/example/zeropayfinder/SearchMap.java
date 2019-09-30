@@ -116,7 +116,7 @@ public class SearchMap extends FragmentActivity implements OnMapReadyCallback,Ac
         Location_name = (EditText) findViewById(R.id.LocationText);
         intent=new Intent(this.getIntent());
         final String jwt=intent.getStringExtra("jwt");
-        jwt2 = jwt;
+        jwt2 = SaveSharedPreference.getUserName(SearchMap.this);
         imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
         locationRequest = new LocationRequest()
                 .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)

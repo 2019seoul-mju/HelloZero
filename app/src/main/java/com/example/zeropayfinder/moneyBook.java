@@ -70,7 +70,7 @@ public class moneyBook extends AppCompatActivity {
         intent=new Intent(this.getIntent());
 
         final String jwt=intent.getStringExtra("jwt");
-        jwt2 = jwt;
+        jwt2 = SaveSharedPreference.getUserName(moneyBook.this);
         mc.requestGet("http://15.164.118.95/hello/listMyPay", "search");
 
 

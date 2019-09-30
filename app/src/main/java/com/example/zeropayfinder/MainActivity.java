@@ -14,8 +14,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
     TextView tvLogin;
-    Button mbtMap,mbtBook,mbtSearchMap,mbtTutorial,mbtLogin,mbtAccount;
-    static String jwttemp;
+    Button mbtMap,mbtBook,mbtSearchMap,mbtTutorial,mbtAccount;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -26,7 +25,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
        // findViewById(R.id.btn_popupmenu).setOnClickListener(this);
         tvLogin = (TextView) findViewById(R.id.tvUserlogin);
 
-        if(jwttemp==null){
+        if(SaveSharedPreference.getUserName(MainActivity.this).length() == 0){
             tvLogin.setText("로그인");
         }else{
             tvLogin.setText("로그아웃");
@@ -34,20 +33,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         tvLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(jwttemp == null){
+                if(SaveSharedPreference.getUserName(MainActivity.this).length() == 0){
                     Intent intent = new Intent(getApplicationContext(),login.class);
                     startActivity(intent);//액티비티 띄우기
                 }else{
-                    tvLogin.setText("로그인");
                     Toast.makeText(MainActivity.this, "로그아웃 되었습니다.", Toast.LENGTH_LONG).show();
-                    jwttemp=null;
+                    SaveSharedPreference.clearUserName(MainActivity.this);
+                    tvLogin.setText("로그인");
                 }
             }
         });
-
-        Intent intent=new Intent(this.getIntent());
-        final String jwt=intent.getStringExtra("jwt");
-        jwttemp = jwt;
 
 //        //액션바 설정하기//
 //        //액션바 타이틀 변경하기
@@ -73,7 +68,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getApplicationContext(),Map.class);
-                intent.putExtra("jwt",jwttemp);
                 startActivity(intent);//액티비티 띄우기
             }
         });
@@ -82,8 +76,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getApplicationContext(),moneyBook.class);
-                intent.putExtra("jwt",jwttemp);
-                if(jwttemp == null){
+                if(SaveSharedPreference.getUserName(MainActivity.this).length() == 0){
                     Toast.makeText(MainActivity.this, "로그인이 필요한 서비스입니다.", Toast.LENGTH_SHORT).show();
                 }
                 else startActivity(intent);//액티비티 띄우기
@@ -94,7 +87,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getApplicationContext(),SearchMap.class);
-                intent.putExtra("jwt",jwttemp);
                 startActivity(intent);//액티비티 띄우기
             }
         });
@@ -111,7 +103,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getApplicationContext(),stamp.class);
-                if(jwttemp == null){
+                if(SaveSharedPreference.getUserName(MainActivity.this).length() == 0){
                     Toast.makeText(MainActivity.this, "로그인이 필요한 서비스입니다.", Toast.LENGTH_SHORT).show();
                 }
                 else startActivity(intent);//액티비티 띄우기
@@ -120,10 +112,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
-
-    }
-    public static void setJWT(String jwt){
-        MainActivity.jwttemp = jwt;
 
     }
 
@@ -177,7 +165,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     protected void onRestart() {
         super.onRestart();
-        if(MainActivity.jwttemp != null){
+        if(SaveSharedPreference.getUserName(MainActivity.this).length() != 0){
             tvLogin.setText("로그아웃");
         }else{
             tvLogin.setText("로그인");
