@@ -83,8 +83,7 @@ public class mapdetail extends AppCompatActivity {
         adapter = new ListViewAdapter();
         list.setAdapter(adapter);
 
-        final String jwt=intent.getStringExtra("jwt");
-        jwt2 = jwt;
+        jwt2 = SaveSharedPreference.getUserName(mapdetail.this);
 
         try{
             connectuser = decodeJWT(jwt2);
